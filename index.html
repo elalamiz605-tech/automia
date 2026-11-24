@@ -1,0 +1,1606 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Automia</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Automia, agencia de automatización e IA en España. Recepcionista IA 24/7 en español, inglés y francés, automatizaciones, web, redes sociales y anuncios para pymes y comercios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 1160px column; hero split text | live flow; bands alternate over a fixed animated network canvas. */
+:root {
+  --bg: #F5F7F4; --surface: #FFFFFF; --surface-2: #EAF0EB; --border: #D6DED8;
+  --text: #121614; --text-muted: #535C57;
+  --primary: #0F6B4F; --primary-hover: #0B563F; --on-primary: #FFFFFF; --primary-soft: #DDEEE5;
+  --accent: #E39B2D; --success: #1E7F4F; --error: #B3261E;
+  --header-bg: rgba(245, 247, 244, .9);
+  --band: rgba(234, 240, 235, .88);
+  --aurora-op: .55;
+
+  --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Instrument Sans", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --fs-xs: .8125rem; --fs-sm: .9375rem; --fs-base: 1.0625rem; --fs-lg: 1.25rem;
+  --fs-xl: 1.5rem; --fs-2xl: clamp(2rem, 4vw, 2.75rem); --fs-3xl: clamp(2.6rem, 6.4vw, 4.5rem);
+
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px;
+  --s-7: 48px; --s-8: 64px; --s-9: 96px; --s-10: 128px;
+  --r-sm: 6px; --r-md: 12px; --r-lg: 20px;
+  --shadow: 0 1px 2px rgba(18, 22, 20, .06), 0 12px 32px -12px rgba(18, 22, 20, .18);
+  --content: 1160px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1110; --surface: #151B18; --surface-2: #1B2320; --border: #2A3430;
+    --text: #EAF0EC; --text-muted: #A2ADA7;
+    --primary: #3FCF98; --primary-hover: #62DCAD; --on-primary: #062016; --primary-soft: #15302A;
+    --accent: #F2B85C; --success: #4CC98A; --error: #F2847C;
+    --header-bg: rgba(13, 17, 16, .88); --band: rgba(27, 35, 32, .88); --aurora-op: .75;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 16px 40px -16px rgba(0, 0, 0, .6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1110; --surface: #151B18; --surface-2: #1B2320; --border: #2A3430;
+  --text: #EAF0EC; --text-muted: #A2ADA7;
+  --primary: #3FCF98; --primary-hover: #62DCAD; --on-primary: #062016; --primary-soft: #15302A;
+  --accent: #F2B85C; --success: #4CC98A; --error: #F2847C;
+  --header-bg: rgba(13, 17, 16, .88); --band: rgba(27, 35, 32, .88); --aurora-op: .75;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 16px 40px -16px rgba(0, 0, 0, .6);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(80px + env(safe-area-inset-top, 0px)); -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: var(--font-body); font-size: var(--fs-base); line-height: 1.6;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--header-bg); }
+img, svg { max-width: 100%; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.1; margin: 0; text-wrap: balance; letter-spacing: -.02em; }
+h3 { font-weight: 600; font-size: var(--fs-xl); line-height: 1.25; letter-spacing: -.01em; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+a { color: var(--primary); }
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; border-radius: 4px; }
+
+#bg-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.bg-aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; opacity: var(--aurora-op); }
+.bg-aurora span { position: absolute; width: 62vmax; height: 62vmax; border-radius: 50%; will-change: transform; }
+.bg-aurora span:nth-child(1) { top: -28vmax; left: -18vmax; background: radial-gradient(closest-side, color-mix(in srgb, var(--primary) 34%, transparent), transparent); animation: drift-a 26s ease-in-out infinite alternate; }
+.bg-aurora span:nth-child(2) { top: 6vh; right: -30vmax; background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 24%, transparent), transparent); animation: drift-b 32s ease-in-out infinite alternate; }
+.bg-aurora span:nth-child(3) { bottom: -34vmax; left: 20vw; background: radial-gradient(closest-side, color-mix(in srgb, var(--primary) 24%, transparent), transparent); animation: drift-c 38s ease-in-out infinite alternate; }
+@keyframes drift-a { to { transform: translate(22vw, 16vh) scale(1.15); } }
+@keyframes drift-b { to { transform: translate(-24vw, 22vh) scale(.9); } }
+@keyframes drift-c { to { transform: translate(-12vw, -28vh) scale(1.2); } }
+.bg-grid { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(color-mix(in srgb, var(--text) 18%, transparent) 1px, transparent 1.3px); background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 15%, transparent 75%); mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 15%, transparent 75%); }
+.page { position: relative; z-index: 1; }
+
+.wrap {
+  width: 100%; max-width: calc(var(--content) + 64px); margin-inline: auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 720px) {
+  .wrap { padding-left: max(32px, env(safe-area-inset-left, 0px)); padding-right: max(32px, env(safe-area-inset-right, 0px)); }
+}
+.section { padding-block: var(--s-8); }
+@media (min-width: 900px) { .section { padding-block: var(--s-9); } }
+.band { background: var(--band); border-block: 1px solid var(--border); }
+
+.eyebrow { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--primary); display: inline-flex; align-items: center; gap: var(--s-2); }
+.eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.section-head { display: grid; gap: var(--s-4); max-width: 720px; margin-bottom: var(--s-7); }
+.section-head h2 { font-size: var(--fs-2xl); }
+.lead { font-size: var(--fs-lg); color: var(--text-muted); line-height: 1.5; }
+.muted { color: var(--text-muted); }
+
+.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.icon-box { width: 44px; height: 44px; border-radius: var(--r-md); background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; flex: none; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+  min-height: 48px; padding: 0 var(--s-5); border-radius: var(--r-md);
+  font: 600 var(--fs-base)/1 var(--font-body); text-decoration: none; cursor: pointer;
+  border: 1px solid transparent; transition: background-color .15s, border-color .15s, transform .15s;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--primary); color: var(--on-primary); }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border); }
+.btn-secondary:hover { background: var(--surface-2); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.btn .i { width: 18px; height: 18px; }
+
+/* Header */
+.header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: var(--header-bg); backdrop-filter: saturate(1.4) blur(10px); -webkit-backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid transparent; transition: border-color .2s; }
+.header.scrolled { border-bottom-color: var(--border); }
+.header-inner { display: flex; align-items: center; gap: var(--s-5); min-height: 68px; }
+.logo { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-family: var(--font-display); font-weight: 700; font-size: 1.375rem; letter-spacing: -.03em; }
+.logo svg { width: 30px; height: 30px; }
+.nav { display: none; margin-left: auto; gap: var(--s-1); }
+.nav a { color: var(--text-muted); text-decoration: none; font-size: var(--fs-sm); font-weight: 500; padding: 8px 12px; border-radius: var(--r-sm); }
+.nav a:hover { color: var(--text); background: var(--surface-2); }
+.header-tools { display: flex; align-items: center; gap: var(--s-2); margin-left: auto; }
+.lang { display: inline-flex; border: 1px solid var(--border); border-radius: var(--r-sm); overflow: hidden; background: var(--surface); }
+.lang button { border: 0; background: transparent; color: var(--text-muted); font: 600 var(--fs-xs)/1 var(--font-body); padding: 0 10px; min-height: 36px; min-width: 40px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); }
+.icon-btn { width: 40px; height: 40px; display: grid; place-items: center; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
+.icon-btn:hover { background: var(--surface-2); }
+.theme-btn .moon { display: none; }
+:root[data-theme="dark"] .theme-btn .sun { display: none; }
+:root[data-theme="dark"] .theme-btn .moon { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-btn .sun { display: none; }
+  :root:not([data-theme="light"]) .theme-btn .moon { display: block; }
+}
+.header-cta { display: none; }
+.mobile-nav { border-top: 1px solid var(--border); padding-block: var(--s-3) var(--s-5); }
+.mobile-nav ul { display: grid; gap: 2px; }
+.mobile-nav a:not(.btn) { display: block; padding: 12px 4px; color: var(--text); text-decoration: none; font-weight: 500; border-bottom: 1px solid var(--border); }
+.mobile-nav .btn { width: 100%; margin-top: var(--s-4); }
+@media (min-width: 1020px) {
+  .nav { display: flex; }
+  .header-tools { margin-left: var(--s-2); }
+  .header-cta { display: inline-flex; min-height: 40px; padding: 0 var(--s-4); font-size: var(--fs-sm); }
+  .menu-btn, .mobile-nav { display: none !important; }
+}
+
+/* Hero */
+.hero { padding-block: var(--s-8) var(--s-8); }
+@media (min-width: 900px) { .hero { padding-block: var(--s-9) var(--s-9); } }
+.hero-grid { display: grid; gap: var(--s-7); align-items: center; }
+@media (min-width: 960px) { .hero-grid { grid-template-columns: 1.08fr .92fr; gap: var(--s-8); } }
+.hero-copy { display: grid; gap: var(--s-5); min-width: 0; }
+.hero h1 { font-size: var(--fs-3xl); letter-spacing: -.035em; }
+.hero h1 .hl { color: var(--primary); position: relative; white-space: nowrap; }
+.hero h1 .hl::after { content: ""; position: absolute; left: 0; right: 0; bottom: .04em; height: .12em; background: var(--accent); border-radius: 2px; transform-origin: left; animation: underline 1s .4s cubic-bezier(.2,.7,.2,1) both; z-index: -1; }
+@keyframes underline { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.hero .lead { max-width: 560px; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+.langs-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); font-size: var(--fs-sm); color: var(--text-muted); }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: var(--fs-xs); font-weight: 600; color: var(--text); }
+
+/* Flow card */
+.flow { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: var(--s-5); min-width: 0; }
+.flow-top { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); margin-bottom: var(--s-5); }
+.flow-title { font-weight: 600; font-size: var(--fs-sm); }
+.live { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--text-muted); }
+.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: blink 1.6s infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.steps { display: grid; gap: 0; }
+.step { display: grid; grid-template-columns: 40px 1fr; gap: var(--s-3); position: relative; padding-bottom: var(--s-5); }
+.step:last-child { padding-bottom: 0; }
+.step::before { content: ""; position: absolute; left: 19px; top: 40px; bottom: 0; width: 2px; background: var(--border); }
+.step:last-child::before { display: none; }
+.step::after { content: ""; position: absolute; left: 19px; top: 40px; width: 2px; height: 0; background: var(--primary); transition: height .6s ease; }
+.step.done::after { height: calc(100% - 40px); }
+.step:last-child::after { display: none; }
+.step-dot { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); transition: background-color .3s, color .3s, border-color .3s, transform .3s; position: relative; z-index: 1; }
+.step-dot .i { width: 18px; height: 18px; }
+.step.on .step-dot { background: var(--primary); color: var(--on-primary); border-color: var(--primary); transform: scale(1.05); }
+.step-body { min-width: 0; padding-top: 2px; opacity: .45; transition: opacity .4s; }
+.step.on .step-body { opacity: 1; }
+.step-label { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); display: flex; gap: var(--s-2); flex-wrap: wrap; }
+.step-label time { font-variant-numeric: tabular-nums; font-weight: 500; text-transform: none; letter-spacing: 0; }
+.bubble { margin-top: 6px; padding: 10px 12px; border-radius: 12px; font-size: var(--fs-sm); line-height: 1.45; background: var(--surface-2); border: 1px solid var(--border); overflow-wrap: anywhere; }
+.bubble.bot { background: var(--primary-soft); border-color: transparent; }
+.bubble.sys { display: flex; align-items: center; gap: var(--s-2); font-weight: 500; }
+.typing { display: inline-flex; gap: 4px; padding: 4px 0; }
+.typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); animation: typing 1s infinite; }
+.typing span:nth-child(2) { animation-delay: .15s; }
+.typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: .4; } 30% { transform: translateY(-4px); opacity: 1; } }
+.step .reply-text { display: none; }
+.step.typed .reply-text { display: inline; }
+.step.typed .typing { display: none; }
+.flow-note { margin-top: var(--s-4); font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* Tools strip */
+.strip { padding-block: var(--s-5); border-block: 1px solid var(--border); background: var(--band); }
+.strip-inner { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-6); justify-content: space-between; }
+.strip p { font-size: var(--fs-sm); color: var(--text-muted); }
+.tools { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; color: var(--text); opacity: .8; }
+
+/* Workflow demo (n8n / Make style) */
+.wf { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow); overflow: hidden; }
+.wf-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-3) var(--s-5); padding: var(--s-4) var(--s-5); border-bottom: 1px solid var(--border); }
+.wf-name { display: flex; align-items: center; gap: var(--s-3); min-width: 0; }
+.wf-name strong { display: block; font-size: var(--fs-sm); line-height: 1.3; }
+.wf-name small { display: block; font-size: var(--fs-xs); color: var(--text-muted); }
+.icon-box.sm { width: 36px; height: 36px; border-radius: 10px; }
+.wf-try { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); font-size: var(--fs-xs); color: var(--text-muted); font-weight: 600; }
+.wf-chip { border: 1px solid var(--border); background: var(--bg); color: var(--text); font: 600 var(--fs-xs)/1 var(--font-body); min-height: 34px; padding: 0 12px; border-radius: 999px; cursor: pointer; transition: background-color .2s, border-color .2s, color .2s; }
+.wf-chip:hover { border-color: var(--primary); }
+.wf-chip[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.wf-stats { display: flex; align-items: center; gap: var(--s-4); font-size: var(--fs-xs); color: var(--text-muted); }
+.wf-active { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-weight: 700; }
+.wf-active::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: blink 1.6s infinite; }
+.wf-count strong { font-family: var(--font-mono); color: var(--text); font-variant-numeric: tabular-nums; margin-left: 4px; }
+.wf-canvas { position: relative; padding: var(--s-6) var(--s-4); background-color: var(--bg); background-image: radial-gradient(color-mix(in srgb, var(--text) 14%, transparent) 1px, transparent 1.2px); background-size: 20px 20px; }
+.wf-edges { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.wf-edge { fill: none; stroke: var(--border); stroke-width: 2; transition: stroke .3s, opacity .3s; }
+.wf-edge.active { stroke: var(--primary); stroke-dasharray: 6 6; animation: dash .5s linear infinite; }
+.wf-edge.done { stroke: color-mix(in srgb, var(--primary) 60%, var(--border)); }
+.wf-edge.dim, .wf-port.dim { opacity: .3; }
+@keyframes dash { to { stroke-dashoffset: -12; } }
+.wf-port { fill: var(--surface); stroke: var(--border); stroke-width: 2; transition: fill .3s, stroke .3s; }
+.wf-port.on { stroke: var(--primary); fill: var(--primary); }
+.packet { opacity: 0; transition: opacity .15s; }
+.packet.show { opacity: 1; }
+.packet .glow { fill: var(--primary); opacity: .25; }
+.packet .core { fill: var(--primary); stroke: var(--surface); stroke-width: 2; }
+.wf-grid { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px var(--s-3);
+  grid-template-areas: "n1 n1 n1" "n2 n2 n2" "n3 n3 n3" "a1 b1 c1" "a2 b2 c2"; }
+.node { position: relative; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 10px; align-items: center; padding: 10px 12px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; transition: border-color .3s, box-shadow .3s, opacity .4s, transform .3s; min-width: 0; }
+.node.main { justify-self: center; width: min(100%, 280px); }
+.node .n-ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary); }
+.node.k-ai .n-ic { background: color-mix(in srgb, var(--accent) 24%, var(--surface)); color: color-mix(in srgb, var(--accent) 50%, var(--text)); }
+.node.k-logic .n-ic, .node.k-data .n-ic { background: var(--surface-2); color: var(--text); }
+.n-txt { min-width: 0; display: grid; }
+.n-t { font-weight: 600; font-size: .875rem; line-height: 1.25; overflow-wrap: anywhere; }
+.n-s { font-size: .75rem; color: var(--text-muted); line-height: 1.3; }
+.n-badge { position: absolute; top: -9px; right: -9px; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); border: 2px solid transparent; opacity: 0; transform: scale(.5); transition: opacity .2s, transform .25s cubic-bezier(.3,1.6,.5,1); }
+.n-badge svg { width: 12px; height: 12px; stroke: var(--on-primary); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.node.running { border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 16%, transparent); }
+.node.running .n-badge { opacity: 1; transform: scale(1); border-color: var(--primary-soft); border-top-color: var(--primary); animation: spin .7s linear infinite; }
+.node.done { border-color: color-mix(in srgb, var(--primary) 55%, var(--border)); }
+.node.done .n-badge { opacity: 1; transform: scale(1); background: var(--primary); border-color: var(--primary); animation: none; }
+.node.done .n-badge svg { opacity: 1; }
+.node.dim { opacity: .38; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 640px) {
+  .wf-grid .node.br { grid-template-columns: 1fr; justify-items: center; text-align: center; padding: 10px 6px; gap: 6px; }
+  .wf-grid .node.br .n-s { display: none; }
+  .wf-grid .node.br .n-t { white-space: normal; font-size: .75rem; }
+  .wf-bar { padding: var(--s-4); }
+}
+@media (min-width: 1080px) {
+  .wf-canvas { padding: var(--s-7) var(--s-5); }
+  .wf-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-5) var(--s-6); align-items: center;
+    grid-template-areas: ". . . a1 a2" "n1 n2 n3 b1 b2" ". . . c1 c2"; }
+  .node.main { justify-self: stretch; width: auto; }
+}
+.wf-log { border-top: 1px solid var(--border); padding: var(--s-4) var(--s-5); font-family: var(--font-mono); font-size: .8125rem; line-height: 1.45; height: 204px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; background: var(--surface); }
+.log-line { display: grid; grid-template-columns: auto 14px minmax(0, 1fr); gap: 10px; align-items: baseline; animation: logIn .35s ease both; }
+.log-line time { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.log-line .g { color: var(--primary); font-weight: 700; }
+.log-line .x { overflow-wrap: anywhere; }
+.log-line.final .x { color: var(--primary); font-weight: 500; }
+@keyframes logIn { from { opacity: 0; transform: translateY(8px); } }
+@media (max-width: 640px) { .wf-log { font-size: .75rem; height: 236px; padding: var(--s-4); } .log-line time { display: none; } .log-line { grid-template-columns: 14px minmax(0, 1fr); } }
+
+.auto .icon-box { transition: background-color .25s, color .25s, transform .3s cubic-bezier(.3,1.6,.5,1); }
+.auto:hover .icon-box { background: var(--primary); color: var(--on-primary); transform: rotate(-6deg) scale(1.06); }
+
+/* Automations list */
+.auto-grid { display: grid; gap: 0; border-top: 1px solid var(--border); }
+@media (min-width: 720px) { .auto-grid { grid-template-columns: 1fr 1fr; column-gap: var(--s-7); } }
+@media (min-width: 1020px) { .auto-grid { grid-template-columns: repeat(3, 1fr); } }
+.auto { display: grid; grid-template-columns: auto 1fr; gap: var(--s-4); padding-block: var(--s-5); border-bottom: 1px solid var(--border); }
+.auto h3 { font-size: 1.125rem; margin-bottom: 4px; }
+.auto p { font-size: var(--fs-sm); color: var(--text-muted); }
+
+/* Receptionist */
+.recep-grid { display: grid; gap: var(--s-7); align-items: center; }
+@media (min-width: 960px) { .recep-grid { grid-template-columns: 1fr 1fr; gap: var(--s-8); } }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--accent); color: #1C1405; font-size: var(--fs-xs); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; width: fit-content; }
+.checks { display: grid; gap: var(--s-3); margin-top: var(--s-2); }
+.checks li { display: grid; grid-template-columns: 24px 1fr; gap: var(--s-3); align-items: start; }
+.checks .i { color: var(--primary); width: 22px; height: 22px; margin-top: 2px; }
+.phone { background: var(--surface); border: 1px solid var(--border); border-radius: 28px; box-shadow: var(--shadow); padding: var(--s-4); max-width: 420px; width: 100%; justify-self: center; min-width: 0; }
+.phone-head { display: flex; align-items: center; gap: var(--s-3); padding: var(--s-2) var(--s-2) var(--s-4); border-bottom: 1px solid var(--border); }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; }
+.phone-head strong { display: block; font-size: var(--fs-sm); }
+.phone-head span { font-size: var(--fs-xs); color: var(--text-muted); }
+.chat { display: grid; gap: var(--s-3); padding: var(--s-4) var(--s-1) var(--s-2); }
+.msg { max-width: 85%; padding: 10px 12px; border-radius: 14px; font-size: var(--fs-sm); line-height: 1.45; overflow-wrap: anywhere; }
+.msg.in { background: var(--surface-2); border-bottom-left-radius: 4px; }
+.msg.out { background: var(--primary-soft); justify-self: end; border-bottom-right-radius: 4px; }
+.msg .tag { display: block; font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 2px; }
+.msg.out .tag { color: var(--primary); }
+.chat-sys { justify-self: center; font-size: var(--fs-xs); color: var(--text-muted); background: var(--surface-2); padding: 4px 10px; border-radius: 999px; display: inline-flex; gap: 6px; align-items: center; }
+.chat-sys .i { width: 14px; height: 14px; color: var(--primary); }
+
+/* Services */
+.pillars { display: grid; gap: var(--s-5); }
+@media (min-width: 900px) { .pillars { grid-template-columns: repeat(3, 1fr); } }
+.pillar { padding: var(--s-6); border-radius: var(--r-lg); border: 1px solid var(--border); background: var(--surface); display: grid; gap: var(--s-4); align-content: start; }
+.pillar.featured { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.pillar.featured .icon-box { background: rgba(255,255,255,.16); color: var(--on-primary); }
+.pillar.featured p, .pillar.featured li { color: var(--on-primary); }
+.pillar.featured li::before { background: var(--on-primary); }
+.pillar p { color: var(--text-muted); font-size: var(--fs-sm); }
+.pillar ul { display: grid; gap: var(--s-2); border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent); padding-top: var(--s-4); }
+.pillar li { display: grid; grid-template-columns: 14px 1fr; gap: var(--s-2); align-items: baseline; font-size: var(--fs-sm); font-weight: 500; }
+.pillar li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--primary); transform: translateY(-2px); }
+
+/* Sectors tabs */
+.tabs { display: flex; gap: var(--s-2); overflow-x: auto; padding-bottom: var(--s-2); margin-bottom: var(--s-5); scrollbar-width: thin; }
+.tab { flex: none; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: 600 var(--fs-sm)/1 var(--font-body); padding: 0 var(--s-4); min-height: 44px; border-radius: 999px; cursor: pointer; }
+.tab:hover { border-color: var(--primary); }
+.tab[aria-selected="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.panel { display: grid; gap: var(--s-6); background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: var(--s-6); }
+@media (min-width: 900px) { .panel { grid-template-columns: .9fr 1.1fr; padding: var(--s-7); } }
+.panel h3 { font-size: var(--fs-2xl); margin-bottom: var(--s-3); }
+.panel .ready { display: inline-flex; align-items: center; gap: 6px; margin-top: var(--s-4); font-weight: 600; color: var(--primary); font-size: var(--fs-sm); }
+.panel .checks { margin: 0; }
+
+/* Plans */
+.plans { display: grid; gap: var(--s-5); align-items: stretch; }
+@media (min-width: 960px) { .plans { grid-template-columns: repeat(3, 1fr); } }
+.plan { position: relative; display: flex; flex-direction: column; gap: var(--s-4); padding: var(--s-6); border-radius: var(--r-lg); border: 1px solid var(--border); background: var(--surface); }
+.plan.rec { border: 2px solid var(--primary); box-shadow: var(--shadow); }
+.plan .badge { position: absolute; top: -14px; left: var(--s-6); }
+.plan-name { font-family: var(--font-display); font-weight: 700; font-size: 1.75rem; letter-spacing: -.02em; }
+.plan-for { color: var(--text-muted); font-size: var(--fs-sm); }
+.price { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; padding-block: var(--s-3); border-block: 1px solid var(--border); }
+.price small { display: block; font-family: var(--font-body); font-weight: 400; font-size: var(--fs-xs); color: var(--text-muted); }
+.plan .checks { flex: 1; font-size: var(--fs-sm); }
+.plan .checks .i { width: 18px; height: 18px; }
+.plan .btn { width: 100%; }
+
+/* Calculator */
+.calc { display: grid; gap: var(--s-6); background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: var(--s-6); box-shadow: var(--shadow); }
+@media (min-width: 960px) { .calc { grid-template-columns: 1.1fr .9fr; padding: var(--s-7); gap: var(--s-8); } }
+.calc-inputs { display: grid; gap: var(--s-5); min-width: 0; }
+.field-range label { display: flex; justify-content: space-between; gap: var(--s-3); font-weight: 600; font-size: var(--fs-sm); margin-bottom: var(--s-2); }
+.field-range output { font-variant-numeric: tabular-nums; color: var(--primary); font-family: var(--font-display); font-size: 1.125rem; }
+input[type="range"] { width: 100%; accent-color: var(--primary); height: 28px; cursor: pointer; }
+.calc-out { display: grid; gap: var(--s-4); align-content: start; background: var(--surface-2); border-radius: var(--r-md); padding: var(--s-5); min-width: 0; }
+.stat { display: grid; gap: 2px; padding-bottom: var(--s-4); border-bottom: 1px solid var(--border); }
+.stat:last-of-type { border-bottom: 0; padding-bottom: 0; }
+.stat strong { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 2.75rem); line-height: 1.05; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.stat.big strong { color: var(--primary); }
+.stat span { font-size: var(--fs-sm); color: var(--text-muted); }
+.calc-note { font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* Method */
+.method { display: grid; gap: var(--s-5); counter-reset: step; }
+@media (min-width: 720px) { .method { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1020px) { .method { grid-template-columns: repeat(4, 1fr); } }
+.method li { counter-increment: step; display: grid; gap: var(--s-3); align-content: start; padding-top: var(--s-5); border-top: 2px solid var(--text); }
+.method li::before { content: counter(step); font-family: var(--font-display); font-weight: 700; font-size: 2.5rem; line-height: 1; color: var(--primary); }
+.method h3 { font-size: 1.25rem; }
+.method p { color: var(--text-muted); font-size: var(--fs-sm); }
+
+/* Francophone band */
+.fr-band { background: var(--text); color: var(--bg); border-radius: var(--r-lg); padding: var(--s-6); display: grid; gap: var(--s-5); align-items: center; }
+@media (min-width: 900px) { .fr-band { grid-template-columns: 1fr auto; padding: var(--s-7); } }
+.fr-band h2 { font-size: clamp(1.5rem, 3vw, 2.125rem); }
+.fr-band p { opacity: .8; margin-top: var(--s-2); }
+.fr-band .btn { background: var(--accent); color: #1C1405; }
+.fr-band .btn:hover { filter: brightness(1.05); }
+.fr-band :focus-visible { outline-color: var(--accent); }
+
+/* FAQ */
+.faq-grid { display: grid; gap: var(--s-7); }
+@media (min-width: 960px) { .faq-grid { grid-template-columns: .8fr 1.2fr; } }
+.faq { border-top: 1px solid var(--border); }
+.faq details { border-bottom: 1px solid var(--border); }
+.faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: var(--s-4); align-items: center; padding-block: var(--s-5); font-weight: 600; font-size: 1.0625rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--font-display); font-size: 1.5rem; line-height: 1; color: var(--primary); transition: transform .2s; flex: none; }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p { padding-bottom: var(--s-5); color: var(--text-muted); max-width: 640px; }
+
+/* Contact */
+.contact-grid { display: grid; gap: var(--s-7); }
+@media (min-width: 960px) { .contact-grid { grid-template-columns: .9fr 1.1fr; gap: var(--s-8); } }
+.contact-info { display: grid; gap: var(--s-5); align-content: start; }
+.contact-lines { display: grid; gap: var(--s-3); margin-top: var(--s-3); }
+.contact-line { display: flex; align-items: center; gap: var(--s-3); padding: var(--s-4); border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface); text-decoration: none; color: var(--text); min-width: 0; }
+.contact-line:hover { border-color: var(--primary); }
+.contact-line small { display: block; color: var(--text-muted); font-size: var(--fs-xs); }
+.contact-line strong { overflow-wrap: anywhere; }
+.form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: var(--s-6); box-shadow: var(--shadow); display: grid; gap: var(--s-4); min-width: 0; }
+.form-row { display: grid; gap: var(--s-4); }
+@media (min-width: 600px) { .form-row { grid-template-columns: 1fr 1fr; } }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font-weight: 600; font-size: var(--fs-sm); }
+.field input, .field select, .field textarea {
+  width: 100%; min-height: 48px; padding: 10px 12px; border-radius: var(--r-sm);
+  border: 1px solid var(--border); background: var(--bg); color: var(--text);
+  font: 400 var(--fs-base)/1.4 var(--font-body);
+}
+.field textarea { min-height: 120px; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent); }
+.field .err { color: var(--error); font-size: var(--fs-xs); min-height: 0; }
+.field.invalid input, .field.invalid textarea { border-color: var(--error); }
+.form .btn-primary { width: 100%; }
+.form-legal { font-size: var(--fs-xs); color: var(--text-muted); }
+.form-done { border: 1px solid var(--success); border-radius: var(--r-md); padding: var(--s-4); display: grid; gap: var(--s-3); background: color-mix(in srgb, var(--success) 8%, var(--surface)); }
+.form-done strong { color: var(--success); }
+
+/* Footer */
+.footer { background: var(--surface-2); border-top: 1px solid var(--border); padding-block: var(--s-7) var(--s-6); position: relative; z-index: 1; }
+.footer-grid { display: grid; gap: var(--s-6); }
+@media (min-width: 900px) { .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+.footer h4 { margin: 0 0 var(--s-3); font-size: var(--fs-sm); }
+.footer ul { display: grid; gap: var(--s-2); }
+.footer a { color: var(--text-muted); text-decoration: none; font-size: var(--fs-sm); }
+.footer a:hover { color: var(--text); text-decoration: underline; }
+.footer-bottom { margin-top: var(--s-7); padding-top: var(--s-5); border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: var(--s-3); justify-content: space-between; font-size: var(--fs-xs); color: var(--text-muted); }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--primary); color: var(--on-primary); padding: 10px 14px; border-radius: var(--r-sm); }
+.skip:focus { top: calc(12px + env(safe-area-inset-top, 0px)); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="bg-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+<div class="bg-grid" aria-hidden="true"></div>
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+<a class="skip" href="#main" data-i18n="skip">Saltar al contenido</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h6M16 13H8M16 17H8M10 9H8"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></symbol>
+  <symbol id="i-flow" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect x="13" y="13" width="8" height="8" rx="2"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-mega" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4H8"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-split" viewBox="0 0 24 24"><path d="M16 3h5v5M8 3H3v5M12 22v-8.3a4 4 0 0 0-1.17-2.87L3 3M21 3l-7.83 7.83A4 4 0 0 0 12 13.7"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+</svg>
+
+<div class="page">
+<header class="header" id="top">
+  <div class="wrap header-inner">
+    <a class="logo" href="#top" aria-label="Automia, inicio">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="var(--primary)"/>
+        <path d="M8 22 C 12 22, 12 10, 16 10 S 20 22, 24 22" fill="none" stroke="var(--on-primary)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="8" cy="22" r="2.6" fill="var(--accent)"/>
+        <circle cx="24" cy="22" r="2.6" fill="var(--on-primary)"/>
+      </svg>
+      automia
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#servicios" data-i18n="nav.services">Servicios</a>
+      <a href="#recepcionista" data-i18n="nav.recep">Recepcionista IA</a>
+      <a href="#sectores" data-i18n="nav.sectors">Sectores</a>
+      <a href="#planes" data-i18n="nav.plans">Planes</a>
+      <a href="#calculadora" data-i18n="nav.calc">Calculadora</a>
+      <a href="#faq" data-i18n="nav.faq">Preguntas</a>
+    </nav>
+    <div class="header-tools">
+      <div class="lang" role="group" aria-label="Idioma / Langue">
+        <button type="button" data-lang="es" aria-pressed="true">ES</button>
+        <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+      </div>
+      <button type="button" class="icon-btn theme-btn" id="theme-btn" aria-label="Cambiar tema claro u oscuro" data-i18n-attr="aria-label:theme">
+        <svg class="i sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="i moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+      <a class="btn btn-primary header-cta" href="#contacto" data-i18n="cta.call">Consulta gratis</a>
+      <button type="button" class="icon-btn menu-btn" id="menu-btn" aria-expanded="false" aria-controls="mobile-nav" aria-label="Abrir menú" data-i18n-attr="aria-label:menu">
+        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav wrap" id="mobile-nav" hidden>
+    <ul>
+      <li><a href="#servicios" data-i18n="nav.services">Servicios</a></li>
+      <li><a href="#recepcionista" data-i18n="nav.recep">Recepcionista IA</a></li>
+      <li><a href="#sectores" data-i18n="nav.sectors">Sectores</a></li>
+      <li><a href="#planes" data-i18n="nav.plans">Planes</a></li>
+      <li><a href="#calculadora" data-i18n="nav.calc">Calculadora</a></li>
+      <li><a href="#faq" data-i18n="nav.faq">Preguntas</a></li>
+    </ul>
+    <a class="btn btn-primary" href="#contacto" data-i18n="cta.callLong">Reservar consulta gratis</a>
+  </div>
+</header>
+
+<main id="main">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow" data-i18n="hero.eyebrow">Agencia de automatización e IA · España</span>
+        <h1 data-i18n="hero.title">Menos tareas repetitivas. <span class="hl">Más clientes.</span></h1>
+        <p class="lead" data-i18n="hero.lead">Automatizamos tus reservas, respuestas y seguimientos con IA, y creamos la web, las redes y los anuncios que te traen clientes. Un solo equipo digital, con una cuota al mes.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#contacto"><span data-i18n="cta.callLong">Reservar consulta gratis</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-secondary" href="#demo" data-i18n="cta.demo">Ver la demo en vivo</a>
+        </div>
+        <div class="langs-line">
+          <span data-i18n="hero.langs">Tus clientes atendidos en</span>
+          <span class="chip">Español</span><span class="chip">English</span><span class="chip">Français</span>
+        </div>
+      </div>
+
+      <div class="flow" id="flow" aria-label="Ejemplo de flujo automático: reserva por WhatsApp" data-i18n-attr="aria-label:flow.aria">
+        <div class="flow-top">
+          <span class="flow-title" data-i18n="flow.title">Flujo: reserva por WhatsApp</span>
+          <span class="live" data-i18n="flow.live">Automático</span>
+        </div>
+        <ol class="steps">
+          <li class="step">
+            <span class="step-dot"><svg class="i" aria-hidden="true"><use href="#i-msg"/></svg></span>
+            <div class="step-body">
+              <div class="step-label"><span data-i18n="flow.s1">Mensaje de cliente</span><time>23:47</time></div>
+              <div class="bubble" data-i18n="flow.s1msg">Hola, ¿tenéis mesa para 4 el sábado a las 21h?</div>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-dot"><svg class="i" aria-hidden="true"><use href="#i-bot"/></svg></span>
+            <div class="step-body">
+              <div class="step-label"><span data-i18n="flow.s2">La IA responde</span><time>23:47</time></div>
+              <div class="bubble bot"><span class="typing" aria-hidden="true"><span></span><span></span><span></span></span><span class="reply-text" data-i18n="flow.s2msg">¡Hola! Sí, hay mesa el sábado a las 21:00. ¿A qué nombre la reservo?</span></div>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-dot"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg></span>
+            <div class="step-body">
+              <div class="step-label"><span data-i18n="flow.s3">Reserva creada</span></div>
+              <div class="bubble sys" data-i18n="flow.s3msg">Google Calendar · Sáb 21:00 · 4 personas</div>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-dot"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg></span>
+            <div class="step-body">
+              <div class="step-label"><span data-i18n="flow.s4">Recordatorio programado</span></div>
+              <div class="bubble sys" data-i18n="flow.s4msg">Viernes 18:00 · por WhatsApp</div>
+            </div>
+          </li>
+        </ol>
+        <p class="flow-note" data-i18n="flow.note">Ejemplo de un flujo que montamos para restaurantes. Mientras duermes, sigue funcionando.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip">
+    <div class="wrap strip-inner">
+      <p data-i18n="strip.text">Trabajamos con las herramientas que ya usas</p>
+      <div class="tools" aria-label="Herramientas">
+        <span>WhatsApp Business</span><span>n8n</span><span>Make</span><span>Zapier</span><span>Google</span><span>Meta</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKFLOW DEMO -->
+  <section class="section" id="demo">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="wf.eyebrow">En directo</span>
+        <h2 data-i18n="wf.title">Así trabaja una automatización por ti</h2>
+        <p class="lead" data-i18n="wf.lead">Entra un mensaje, la IA entiende qué quiere el cliente y el flujo hace el resto: reserva, responde o envía un presupuesto. Sin que toques nada.</p>
+      </div>
+      <div class="wf">
+        <div class="wf-bar">
+          <div class="wf-name">
+            <span class="icon-box sm"><svg class="i" aria-hidden="true"><use href="#i-flow"/></svg></span>
+            <div><strong data-i18n="wf.name">Atención al cliente · Restaurante</strong><small data-i18n="wf.sub">Demostración en vivo</small></div>
+          </div>
+          <div class="wf-try" role="group" aria-label="Probar un caso" data-i18n-attr="aria-label:wf.tryAria">
+            <span data-i18n="wf.try">Probar:</span>
+            <button type="button" class="wf-chip" data-sc="0" aria-pressed="false" data-i18n="wf.sc0">Reserva</button>
+            <button type="button" class="wf-chip" data-sc="1" aria-pressed="false" data-i18n="wf.sc1">Pregunta</button>
+            <button type="button" class="wf-chip" data-sc="2" aria-pressed="false" data-i18n="wf.sc2">Presupuesto</button>
+          </div>
+          <div class="wf-stats">
+            <span class="wf-active" data-i18n="wf.active">Activo</span>
+            <span class="wf-count"><span data-i18n="wf.runs">Ejecuciones</span><strong id="wf-runs">0</strong></span>
+          </div>
+        </div>
+        <div class="wf-canvas" id="wf-canvas" aria-hidden="true">
+          <svg class="wf-edges" id="wf-edges"></svg>
+          <div class="wf-grid" id="wf-grid"></div>
+        </div>
+        <div class="wf-log" id="wf-log" aria-hidden="true"></div>
+        <p class="sr-only" data-i18n="wf.sr">Demostración animada: llega un mensaje de WhatsApp, la IA detecta si es una reserva, una pregunta o una petición de presupuesto, y el flujo crea la reserva, responde o envía el presupuesto automáticamente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUTOMATIONS -->
+  <section class="section" id="automatizaciones">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="auto.eyebrow">Automatización</span>
+        <h2 data-i18n="auto.title">Lo que tu negocio deja de hacer a mano</h2>
+        <p class="lead" data-i18n="auto.lead">Tareas que hoy te roban horas cada semana. Las montamos una vez y funcionan solas.</p>
+      </div>
+      <ul class="auto-grid">
+        <li class="auto"><span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-msg"/></svg></span><div><h3 data-i18n="auto.1t">Respuestas 24/7</h3><p data-i18n="auto.1d">WhatsApp, Instagram y la web contestan al momento, también de noche y en festivos.</p></div></li>
+        <li class="auto"><span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg></span><div><h3 data-i18n="auto.2t">Citas y recordatorios</h3><p data-i18n="auto.2d">El cliente reserva solo, la cita entra en tu agenda y recibe un aviso antes de venir.</p></div></li>
+        <li class="auto"><span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-file"/></svg></span><div><h3 data-i18n="auto.3t">Presupuestos y facturas</h3><p data-i18n="auto.3d">Se generan con tus datos y se envían solos. Tú solo revisas y apruebas.</p></div></li>
+        <li class="auto"><span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-repeat"/></svg></span><div><h3 data-i18n="auto.4t">Seguimiento de clientes</h3><p data-i18n="auto.4d">Mensajes automáticos a quien pidió precio y no contestó, o a quien hace tiempo que no vuelve.</p></div></li>
+        <li class="auto"><span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-star"/></svg></span><div><h3 data-i18n="auto.5t">Reseñas de Google</h3><p data-i18n="auto.5d">Después de cada visita, el cliente recibe un enlace para dejar su opinión.</p></div></li>
+        <li class="auto"><span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-flow"/></svg></span><div><h3 data-i18n="auto.6t">Tus herramientas conectadas</h3><p data-i18n="auto.6d">Excel, Google Sheets, tu CRM y tu facturación hablan entre sí. Se acabó copiar y pegar.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- RECEPTIONIST -->
+  <section class="section band" id="recepcionista">
+    <div class="wrap recep-grid">
+      <div class="hero-copy">
+        <span class="badge"><svg class="i" aria-hidden="true" style="width:14px;height:14px"><use href="#i-zap"/></svg><span data-i18n="recep.badge">Producto estrella</span></span>
+        <h2 style="font-size:var(--fs-2xl)" data-i18n="recep.title">Tu recepcionista IA, despierta las 24 horas</h2>
+        <p class="lead" data-i18n="recep.lead">Atiende a cada cliente al instante, en su idioma. Ideal en zonas turísticas, donde cada mensaje sin respuesta es una reserva para la competencia.</p>
+        <ul class="checks">
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="recep.c1">Responde por WhatsApp, Instagram y <strong>llamadas con voz IA</strong></span></li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="recep.c2">Habla español, inglés y francés, y detecta el idioma sola</span></li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="recep.c3">Reserva en tu agenda y envía los recordatorios</span></li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="recep.c4">Conoce tus precios, horarios y normas</span></li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="recep.c5">Te pasa la conversación cuando hace falta una persona</span></li>
+        </ul>
+        <div class="hero-ctas" style="margin-top:var(--s-2)">
+          <a class="btn btn-primary" href="#contacto" data-i18n="recep.cta">Quiero una demo</a>
+        </div>
+      </div>
+      <div class="phone" aria-label="Ejemplo de conversación de la recepcionista IA" data-i18n-attr="aria-label:recep.aria">
+        <div class="phone-head">
+          <span class="avatar"><svg class="i" aria-hidden="true"><use href="#i-bot"/></svg></span>
+          <div><strong data-i18n="recep.name">Salón Lúa · Recepción</strong><span data-i18n="recep.online">en línea · responde al instante</span></div>
+        </div>
+        <div class="chat">
+          <div class="msg in"><span class="tag">EN</span>Hi! Do you have anything free tomorrow at 10am?</div>
+          <div class="msg out"><span class="tag">EN · IA</span>Yes! 10:00 is free for a haircut. Shall I book it under your name?</div>
+          <div class="msg in"><span class="tag">FR</span>Bonjour, vous faites des colorations le samedi ?</div>
+          <div class="msg out"><span class="tag">FR · IA</span>Oui, le samedi de 9h à 14h. Je vous propose 11h30, ça vous va ?</div>
+          <span class="chat-sys"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg><span data-i18n="recep.sys">2 citas añadidas a la agenda</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section" id="servicios">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="serv.eyebrow">Servicios</span>
+        <h2 data-i18n="serv.title">Todo lo digital, en un solo equipo</h2>
+        <p class="lead" data-i18n="serv.lead">No tienes que coordinar a un programador, un diseñador y un community manager. Nos encargamos de todo y hablas con una sola persona.</p>
+      </div>
+      <div class="pillars">
+        <article class="pillar featured">
+          <span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-zap"/></svg></span>
+          <h3 data-i18n="serv.a">Automatizar</h3>
+          <p data-i18n="serv.ad">Para que tu negocio funcione aunque no estés.</p>
+          <ul>
+            <li data-i18n="serv.a1">Automatizaciones con n8n, Make y Zapier</li>
+            <li data-i18n="serv.a2">Chatbots de WhatsApp e Instagram con IA</li>
+            <li data-i18n="serv.a3">Recepcionista IA por voz</li>
+            <li data-i18n="serv.a4">Conexión de Sheets, CRM y facturación</li>
+          </ul>
+        </article>
+        <article class="pillar">
+          <span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg></span>
+          <h3 data-i18n="serv.b">Que te encuentren</h3>
+          <p data-i18n="serv.bd">Para aparecer cuando alguien busca lo que vendes.</p>
+          <ul>
+            <li data-i18n="serv.b1">Diseño web y tiendas online</li>
+            <li data-i18n="serv.b2">Ficha de Google Business optimizada</li>
+            <li data-i18n="serv.b3">SEO local en Google</li>
+            <li data-i18n="serv.b4">Más reseñas, de forma automática</li>
+          </ul>
+        </article>
+        <article class="pillar">
+          <span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-mega"/></svg></span>
+          <h3 data-i18n="serv.c">Atraer clientes</h3>
+          <p data-i18n="serv.cd">Para llenar la agenda de forma constante.</p>
+          <ul>
+            <li data-i18n="serv.c1">Gestión de redes sociales</li>
+            <li data-i18n="serv.c2">Anuncios en Meta y Google</li>
+            <li data-i18n="serv.c3">Branding: logo e identidad visual</li>
+            <li data-i18n="serv.c4">Contenido con IA: fotos, vídeos y textos</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTORS -->
+  <section class="section band" id="sectores">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="sect.eyebrow">Packs por sector</span>
+        <h2 data-i18n="sect.title">Soluciones listas para tu sector, en 7 días</h2>
+        <p class="lead" data-i18n="sect.lead">Partimos de lo que ya funciona en negocios como el tuyo y lo adaptamos a ti.</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Sectores">
+        <button class="tab" role="tab" id="tab-0" aria-controls="sector-panel" aria-selected="true" data-sector="0" data-i18n="sect.t0">Restaurantes</button>
+        <button class="tab" role="tab" id="tab-1" aria-controls="sector-panel" aria-selected="false" tabindex="-1" data-sector="1" data-i18n="sect.t1">Clínicas</button>
+        <button class="tab" role="tab" id="tab-2" aria-controls="sector-panel" aria-selected="false" tabindex="-1" data-sector="2" data-i18n="sect.t2">Peluquerías y estética</button>
+        <button class="tab" role="tab" id="tab-3" aria-controls="sector-panel" aria-selected="false" tabindex="-1" data-sector="3" data-i18n="sect.t3">Inmobiliarias</button>
+        <button class="tab" role="tab" id="tab-4" aria-controls="sector-panel" aria-selected="false" tabindex="-1" data-sector="4" data-i18n="sect.t4">Alquiler turístico</button>
+      </div>
+      <div class="panel" id="sector-panel" role="tabpanel" aria-labelledby="tab-0" tabindex="0">
+        <div>
+          <h3 id="sector-name">Restaurantes</h3>
+          <p class="muted" id="sector-desc"></p>
+          <span class="ready"><svg class="i" aria-hidden="true" style="width:18px;height:18px"><use href="#i-clock"/></svg><span data-i18n="sect.ready">Listo en 7 días</span></span>
+        </div>
+        <ul class="checks" id="sector-list"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANS -->
+  <section class="section" id="planes">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="plans.eyebrow">Planes</span>
+        <h2 data-i18n="plans.title">Una cuota mensual. Todo incluido.</h2>
+        <p class="lead" data-i18n="plans.lead">Empiezas con lo que necesitas y subes de plan cuando creces. El precio depende del tamaño de tu negocio: te lo damos cerrado en la consulta.</p>
+      </div>
+      <div class="plans">
+        <article class="plan">
+          <div><div class="plan-name">Despega</div><p class="plan-for" data-i18n="plans.p1for">Para empezar a estar online</p></div>
+          <!-- PRECIO DESPEGA: sustituir por "Desde XX €/mes" cuando esté definido -->
+          <div class="price"><span data-i18n="plans.price">Precio a medida</span><small data-i18n="plans.priceNote">Te lo damos en la consulta gratuita</small></div>
+          <ul class="checks">
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p1a">Web profesional</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p1b">Ficha de Google Business</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p1c">Chatbot de WhatsApp con IA</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p1d">Mantenimiento y soporte</span></li>
+          </ul>
+          <a class="btn btn-secondary" href="#contacto" data-plan="Despega" data-i18n="plans.cta">Pedir presupuesto</a>
+        </article>
+        <article class="plan rec">
+          <span class="badge" data-i18n="plans.rec">Recomendado</span>
+          <div><div class="plan-name">Crece</div><p class="plan-for" data-i18n="plans.p2for">Para ahorrar tiempo y ganar clientes</p></div>
+          <!-- PRECIO CRECE -->
+          <div class="price"><span data-i18n="plans.price">Precio a medida</span><small data-i18n="plans.priceNote">Te lo damos en la consulta gratuita</small></div>
+          <ul class="checks">
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p2a">Todo lo de Despega</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p2b">Automatizaciones: recordatorios, seguimientos y presupuestos</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p2c">Reseñas de Google automáticas</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p2d">Gestión de redes sociales</span></li>
+          </ul>
+          <a class="btn btn-primary" href="#contacto" data-plan="Crece" data-i18n="plans.cta">Pedir presupuesto</a>
+        </article>
+        <article class="plan">
+          <div><div class="plan-name">Domina</div><p class="plan-for" data-i18n="plans.p3for">Para delegar todo lo digital</p></div>
+          <!-- PRECIO DOMINA -->
+          <div class="price"><span data-i18n="plans.price">Precio a medida</span><small data-i18n="plans.priceNote">Te lo damos en la consulta gratuita</small></div>
+          <ul class="checks">
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p3a">Todo lo de Crece</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p3b">Recepcionista IA por voz (llamadas)</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p3c">Anuncios en Meta y Google</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p3d">SEO local</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="plans.p3e">Informe mensual de resultados</span></li>
+          </ul>
+          <a class="btn btn-secondary" href="#contacto" data-plan="Domina" data-i18n="plans.cta">Pedir presupuesto</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section class="section band" id="calculadora">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="calc.eyebrow">Calculadora gratuita</span>
+        <h2 data-i18n="calc.title">¿Cuánto te cuesta responder a mano?</h2>
+        <p class="lead" data-i18n="calc.lead">Mueve los valores según tu negocio. Los de partida son solo un ejemplo.</p>
+      </div>
+      <div class="calc">
+        <form class="calc-inputs" id="calc-form" onsubmit="return false">
+          <div class="field-range">
+            <label for="c-q"><span data-i18n="calc.q">Consultas al día (WhatsApp, llamadas, Instagram)</span><output for="c-q" id="o-q">25</output></label>
+            <input type="range" id="c-q" min="1" max="150" step="1" value="25">
+          </div>
+          <div class="field-range">
+            <label for="c-m"><span data-i18n="calc.m">Minutos dedicados a cada consulta</span><output for="c-m" id="o-m">4</output></label>
+            <input type="range" id="c-m" min="1" max="20" step="1" value="4">
+          </div>
+          <div class="field-range">
+            <label for="c-p"><span data-i18n="calc.p">% de consultas fuera de horario o sin respuesta</span><output for="c-p" id="o-p">30 %</output></label>
+            <input type="range" id="c-p" min="0" max="80" step="5" value="30">
+          </div>
+          <div class="field-range">
+            <label for="c-v"><span data-i18n="calc.v">Lo que te deja un cliente de media</span><output for="c-v" id="o-v">40 €</output></label>
+            <input type="range" id="c-v" min="10" max="1000" step="10" value="40">
+          </div>
+        </form>
+        <div class="calc-out" aria-live="polite">
+          <div class="stat"><strong id="r-hours">50 h</strong><span data-i18n="calc.r1">al mes respondiendo mensajes</span></div>
+          <div class="stat"><strong id="r-missed">225</strong><span data-i18n="calc.r2">consultas al mes sin respuesta a tiempo</span></div>
+          <div class="stat big"><strong id="r-money">1.800 €</strong><span data-i18n="calc.r3">al mes que podrías estar dejando de ganar</span></div>
+          <p class="calc-note" data-i18n="calc.note">Cálculo orientativo: 30 días al mes y 1 de cada 5 consultas convertida en cliente.</p>
+          <a class="btn btn-primary" href="#contacto" data-i18n="calc.cta">Quiero recuperar ese tiempo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section class="section" id="metodo">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" data-i18n="meth.eyebrow">Cómo trabajamos</span>
+        <h2 data-i18n="meth.title">De la primera consulta a todo funcionando</h2>
+      </div>
+      <ol class="method">
+        <li><h3 data-i18n="meth.1t">Consulta de diagnóstico</h3><p data-i18n="meth.1d">20 minutos, gratis. Vemos dónde pierdes tiempo y clientes.</p></li>
+        <li><h3 data-i18n="meth.2t">Propuesta clara</h3><p data-i18n="meth.2d">Qué hacemos, en qué plazo y a qué precio. Por escrito y sin letra pequeña.</p></li>
+        <li><h3 data-i18n="meth.3t">Puesta en marcha</h3><p data-i18n="meth.3d">Lo montamos y lo probamos contigo. Tu equipo no tiene que aprender nada técnico.</p></li>
+        <li><h3 data-i18n="meth.4t">Seguimiento mensual</h3><p data-i18n="meth.4d">Revisamos los resultados cada mes y mejoramos lo que haga falta.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- FRANCOPHONE -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="fr-band">
+        <div>
+          <h2 data-i18n="fr.title">¿Emprendedor francófono en España?</h2>
+          <p data-i18n="fr.text">Te acompañamos en francés de principio a fin: web, automatizaciones y clientes en España.</p>
+        </div>
+        <a class="btn" href="#contacto" id="fr-cta" data-i18n="fr.cta">Hablemos en francés</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS: añadir aquí opiniones reales de clientes cuando las tengas. No publicar opiniones inventadas. -->
+
+  <!-- FAQ -->
+  <section class="section band" id="faq">
+    <div class="wrap faq-grid">
+      <div class="section-head" style="margin-bottom:0">
+        <span class="eyebrow" data-i18n="faq.eyebrow">Preguntas frecuentes</span>
+        <h2 data-i18n="faq.title">Lo que nos suelen preguntar</h2>
+        <p class="lead" data-i18n="faq.lead">¿Tienes otra duda? Escríbenos y te respondemos.</p>
+      </div>
+      <div class="faq">
+        <details><summary data-i18n="faq.q1">¿Necesito saber de tecnología?</summary><p data-i18n="faq.a1">No. Lo montamos todo y te lo dejamos funcionando. Tú sigues usando WhatsApp y tu agenda como siempre.</p></details>
+        <details><summary data-i18n="faq.q2">¿Cuánto tarda la puesta en marcha?</summary><p data-i18n="faq.a2">Los packs por sector están listos en unos 7 días. Para proyectos a medida, te damos el plazo exacto en la propuesta.</p></details>
+        <details><summary data-i18n="faq.q3">¿Y si la IA se equivoca con un cliente?</summary><p data-i18n="faq.a3">La entrenamos con la información de tu negocio y le ponemos límites claros. Cuando no sabe algo, o el cliente lo pide, te pasa la conversación.</p></details>
+        <details><summary data-i18n="faq.q4">¿Qué pasa con los datos de mis clientes?</summary><p data-i18n="faq.a4">Los datos son tuyos. Trabajamos con herramientas preparadas para cumplir el RGPD y te explicamos dónde se guarda cada dato.</p></details>
+        <details><summary data-i18n="faq.q5">¿Y si algo deja de funcionar?</summary><p data-i18n="faq.a5">Los planes incluyen mantenimiento: vigilamos tus automatizaciones y las arreglamos nosotros.</p></details>
+        <details><summary data-i18n="faq.q6">¿Trabajáis en toda España?</summary><p data-i18n="faq.a6">Sí. Trabajamos en remoto con negocios de toda España, en español, inglés y francés.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contacto">
+    <div class="wrap contact-grid">
+      <div class="contact-info">
+        <span class="eyebrow" data-i18n="ct.eyebrow">Contacto</span>
+        <h2 style="font-size:var(--fs-2xl)" data-i18n="ct.title">Cuéntanos qué te quita tiempo</h2>
+        <p class="lead" data-i18n="ct.lead">Rellena el formulario y te escribimos por WhatsApp para agendar tu consulta gratuita de 20 minutos.</p>
+        <div class="contact-lines">
+          <a class="contact-line" id="wa-link" href="#" target="_blank" rel="noopener">
+            <span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-msg"/></svg></span>
+            <span><small>WhatsApp</small><strong id="wa-display"></strong></span>
+          </a>
+          <div class="contact-line">
+            <span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg></span>
+            <span><small>Email</small><strong id="email-display"></strong></span>
+          </div>
+          <div class="contact-line">
+            <span class="icon-box"><svg class="i" aria-hidden="true"><use href="#i-globe"/></svg></span>
+            <span><small data-i18n="ct.zoneLabel">Zona</small><strong data-i18n="ct.zone">Toda España, en remoto</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <form class="form" id="contact-form" novalidate>
+        <div class="form-row">
+          <div class="field"><label for="f-name" data-i18n="ct.name">Nombre</label><input id="f-name" name="name" autocomplete="name" required><span class="err" data-for="f-name"></span></div>
+          <div class="field"><label for="f-biz" data-i18n="ct.biz">Negocio</label><input id="f-biz" name="business" autocomplete="organization"></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="f-sector" data-i18n="ct.sector">Sector</label>
+            <select id="f-sector" name="sector">
+              <option data-i18n="sect.t0">Restaurantes</option>
+              <option data-i18n="sect.t1">Clínicas</option>
+              <option data-i18n="sect.t2">Peluquerías y estética</option>
+              <option data-i18n="sect.t3">Inmobiliarias</option>
+              <option data-i18n="sect.t4">Alquiler turístico</option>
+              <option data-i18n="ct.other">Otro</option>
+            </select>
+          </div>
+          <div class="field"><label for="f-phone" data-i18n="ct.phone">WhatsApp o teléfono</label><input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required><span class="err" data-for="f-phone"></span></div>
+        </div>
+        <div class="field"><label for="f-msg" data-i18n="ct.msg">¿Qué quieres mejorar?</label><textarea id="f-msg" name="message" data-i18n-attr="placeholder:ct.msgPh" placeholder="Ej.: respondo WhatsApp hasta las 12 de la noche y pierdo reservas"></textarea></div>
+        <button class="btn btn-primary" type="submit"><span data-i18n="ct.submit">Preparar mi mensaje</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        <div class="form-done" id="form-done" hidden>
+          <strong data-i18n="ct.doneTitle">Tu mensaje está listo</strong>
+          <p data-i18n="ct.doneText">Ábrelo en WhatsApp y pulsa enviar. Te respondemos para agendar la consulta.</p>
+          <a class="btn btn-primary" id="done-link" href="#" target="_blank" rel="noopener" data-i18n="ct.doneBtn">Abrir WhatsApp</a>
+        </div>
+        <p class="form-legal" data-i18n="ct.legal">Solo usamos tus datos para responder a tu solicitud.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="#top">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--primary)"/><path d="M8 22 C 12 22, 12 10, 16 10 S 20 22, 24 22" fill="none" stroke="var(--on-primary)" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="22" r="2.6" fill="var(--accent)"/><circle cx="24" cy="22" r="2.6" fill="var(--on-primary)"/></svg>
+          automia
+        </a>
+        <p class="muted" style="margin-top:var(--s-3);max-width:340px;font-size:var(--fs-sm)" data-i18n="ft.tag">Tu equipo digital con IA. Automatización, web, redes y anuncios para pymes y comercios en España.</p>
+      </div>
+      <div>
+        <h4 data-i18n="ft.services">Servicios</h4>
+        <ul>
+          <li><a href="#recepcionista" data-i18n="nav.recep">Recepcionista IA</a></li>
+          <li><a href="#automatizaciones" data-i18n="ft.auto">Automatizaciones</a></li>
+          <li><a href="#servicios" data-i18n="ft.web">Web, SEO y anuncios</a></li>
+          <li><a href="#planes" data-i18n="nav.plans">Planes</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="ft.legal">Legal</h4>
+        <ul>
+          <!-- Enlaces legales: obligatorios en España (LSSI y RGPD). Crear las páginas y cambiar los href. -->
+          <li><a href="#" data-i18n="ft.l1">Aviso legal</a></li>
+          <li><a href="#" data-i18n="ft.l2">Política de privacidad</a></li>
+          <li><a href="#" data-i18n="ft.l3">Política de cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Automia</span>
+      <span data-i18n="ft.made">Hecho en España · ES · EN · FR</span>
+    </div>
+  </div>
+</footer>
+</div>
+
+<script>
+/* ====== CONFIGURACIÓN: cambia estos datos por los tuyos ====== */
+const CONFIG = {
+  whatsapp: "34600000000",          // número con prefijo de país, sin + ni espacios
+  whatsappDisplay: "+34 600 000 000 (ejemplo)",
+  email: "hola@automia.es (ejemplo)"
+};
+/* ============================================================ */
+
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- Traducciones (FR). El español está en el HTML. ---------- */
+const FR = {
+  "skip": "Aller au contenu",
+  "nav.services": "Services", "nav.recep": "Réceptionniste IA", "nav.sectors": "Secteurs", "nav.plans": "Formules", "nav.calc": "Calculateur", "nav.faq": "Questions",
+  "cta.call": "Consultation gratuite", "cta.callLong": "Réserver une consultation gratuite", "cta.calc": "Calculer ce que vous perdez",
+  "hero.eyebrow": "Agence d'automatisation et d'IA · Espagne",
+  "hero.title": "Moins de tâches répétitives. <span class=\"hl\">Plus de clients.</span>",
+  "hero.lead": "Nous automatisons vos réservations, réponses et relances avec l'IA, et nous créons le site, les réseaux et les publicités qui vous amènent des clients. Une seule équipe digitale, un abonnement mensuel.",
+  "hero.langs": "Vos clients servis en",
+  "flow.aria": "Exemple de flux automatique : réservation par WhatsApp",
+  "flow.title": "Flux : réservation par WhatsApp", "flow.live": "Automatique",
+  "flow.s1": "Message client", "flow.s1msg": "Bonjour, vous avez une table pour 4 samedi à 21h ?",
+  "flow.s2": "L'IA répond", "flow.s2msg": "Bonjour ! Oui, il reste une table samedi à 21h00. À quel nom dois-je réserver ?",
+  "flow.s3": "Réservation créée", "flow.s3msg": "Google Agenda · Sam. 21h00 · 4 personnes",
+  "flow.s4": "Rappel programmé", "flow.s4msg": "Vendredi 18h00 · par WhatsApp",
+  "flow.note": "Exemple d'un flux que nous installons pour les restaurants. Il tourne même pendant que vous dormez.",
+  "strip.text": "Nous travaillons avec les outils que vous utilisez déjà",
+  "auto.eyebrow": "Automatisation", "auto.title": "Ce que votre entreprise arrête de faire à la main",
+  "auto.lead": "Des tâches qui vous prennent des heures chaque semaine. On les installe une fois, elles tournent toutes seules.",
+  "auto.1t": "Réponses 24h/24", "auto.1d": "WhatsApp, Instagram et votre site répondent tout de suite, même la nuit et les jours fériés.",
+  "auto.2t": "Rendez-vous et rappels", "auto.2d": "Le client réserve seul, le rendez-vous arrive dans votre agenda et il reçoit un rappel avant de venir.",
+  "auto.3t": "Devis et factures", "auto.3d": "Ils se créent avec vos données et partent tout seuls. Vous n'avez qu'à vérifier et valider.",
+  "auto.4t": "Relance des clients", "auto.4d": "Messages automatiques à ceux qui ont demandé un prix sans répondre, ou qui ne sont pas revenus depuis longtemps.",
+  "auto.5t": "Avis Google", "auto.5d": "Après chaque visite, le client reçoit un lien pour laisser son avis.",
+  "auto.6t": "Vos outils connectés", "auto.6d": "Excel, Google Sheets, votre CRM et votre facturation se parlent. Fini le copier-coller.",
+  "recep.badge": "Produit phare", "recep.title": "Votre réceptionniste IA, éveillée 24h/24",
+  "recep.lead": "Elle répond à chaque client tout de suite, dans sa langue. Idéal dans les zones touristiques, où chaque message sans réponse est une réservation pour la concurrence.",
+  "recep.c1": "Répond sur WhatsApp, Instagram et <strong>au téléphone avec une voix IA</strong>",
+  "recep.c2": "Parle espagnol, anglais et français, et détecte la langue seule",
+  "recep.c3": "Réserve dans votre agenda et envoie les rappels",
+  "recep.c4": "Connaît vos prix, vos horaires et vos règles",
+  "recep.c5": "Vous passe la conversation quand il faut un humain",
+  "recep.cta": "Je veux une démo", "recep.aria": "Exemple de conversation de la réceptionniste IA",
+  "recep.name": "Salon Lúa · Accueil", "recep.online": "en ligne · répond tout de suite", "recep.sys": "2 rendez-vous ajoutés à l'agenda",
+  "serv.eyebrow": "Services", "serv.title": "Tout le digital, dans une seule équipe",
+  "serv.lead": "Plus besoin de coordonner un développeur, un graphiste et un community manager. On s'occupe de tout et vous parlez à une seule personne.",
+  "serv.a": "Automatiser", "serv.ad": "Pour que votre entreprise tourne même sans vous.",
+  "serv.a1": "Automatisations avec n8n, Make et Zapier", "serv.a2": "Chatbots WhatsApp et Instagram avec IA", "serv.a3": "Réceptionniste IA vocale", "serv.a4": "Connexion Sheets, CRM et facturation",
+  "serv.b": "Être trouvé", "serv.bd": "Pour apparaître quand quelqu'un cherche ce que vous vendez.",
+  "serv.b1": "Sites web et boutiques en ligne", "serv.b2": "Fiche Google Business optimisée", "serv.b3": "Référencement local sur Google", "serv.b4": "Plus d'avis, automatiquement",
+  "serv.c": "Attirer des clients", "serv.cd": "Pour remplir votre agenda régulièrement.",
+  "serv.c1": "Gestion des réseaux sociaux", "serv.c2": "Publicité Meta et Google", "serv.c3": "Logo et identité visuelle", "serv.c4": "Contenu avec IA : photos, vidéos et textes",
+  "sect.eyebrow": "Packs par secteur", "sect.title": "Des solutions prêtes pour votre secteur, en 7 jours",
+  "sect.lead": "On part de ce qui marche déjà dans des entreprises comme la vôtre et on l'adapte à vous.",
+  "sect.t0": "Restaurants", "sect.t1": "Cliniques", "sect.t2": "Coiffure et esthétique", "sect.t3": "Immobilier", "sect.t4": "Location touristique",
+  "sect.ready": "Prêt en 7 jours",
+  "plans.eyebrow": "Formules", "plans.title": "Un abonnement mensuel. Tout compris.",
+  "plans.lead": "Vous commencez avec ce dont vous avez besoin et vous montez de formule quand vous grandissez. Le prix dépend de la taille de votre entreprise : on vous le donne pendant la consultation.",
+  "plans.price": "Prix sur mesure", "plans.priceNote": "Donné pendant la consultation gratuite", "plans.cta": "Demander un devis", "plans.rec": "Recommandé",
+  "plans.p1for": "Pour être présent en ligne", "plans.p1a": "Site web professionnel", "plans.p1b": "Fiche Google Business", "plans.p1c": "Chatbot WhatsApp avec IA", "plans.p1d": "Maintenance et support",
+  "plans.p2for": "Pour gagner du temps et des clients", "plans.p2a": "Tout Despega", "plans.p2b": "Automatisations : rappels, relances et devis", "plans.p2c": "Avis Google automatiques", "plans.p2d": "Gestion des réseaux sociaux",
+  "plans.p3for": "Pour déléguer tout le digital", "plans.p3a": "Tout Crece", "plans.p3b": "Réceptionniste IA vocale (appels)", "plans.p3c": "Publicité Meta et Google", "plans.p3d": "Référencement local", "plans.p3e": "Rapport mensuel des résultats",
+  "calc.eyebrow": "Calculateur gratuit", "calc.title": "Combien vous coûte de répondre à la main ?",
+  "calc.lead": "Ajustez les valeurs selon votre activité. Celles de départ ne sont qu'un exemple.",
+  "calc.q": "Demandes par jour (WhatsApp, appels, Instagram)", "calc.m": "Minutes passées par demande", "calc.p": "% de demandes hors horaires ou sans réponse", "calc.v": "Ce que vous rapporte un client en moyenne",
+  "calc.r1": "par mois à répondre aux messages", "calc.r2": "demandes par mois sans réponse à temps", "calc.r3": "par mois que vous pourriez laisser filer",
+  "calc.note": "Calcul indicatif : 30 jours par mois et 1 demande sur 5 qui devient client.", "calc.cta": "Je veux récupérer ce temps",
+  "meth.eyebrow": "Notre méthode", "meth.title": "De la première consultation à tout qui tourne",
+  "meth.1t": "Consultation diagnostic", "meth.1d": "20 minutes, gratuit. On voit où vous perdez du temps et des clients.",
+  "meth.2t": "Proposition claire", "meth.2d": "Ce qu'on fait, en combien de temps et à quel prix. Par écrit, sans petites lignes.",
+  "meth.3t": "Mise en place", "meth.3d": "On installe et on teste avec vous. Votre équipe n'a rien de technique à apprendre.",
+  "meth.4t": "Suivi mensuel", "meth.4d": "On regarde les résultats chaque mois et on améliore ce qu'il faut.",
+  "fr.title": "Entrepreneur francophone en Espagne ?", "fr.text": "On vous accompagne en français du début à la fin : site, automatisations et clients en Espagne.", "fr.cta": "Parlons en français",
+  "faq.eyebrow": "Questions fréquentes", "faq.title": "Ce qu'on nous demande souvent", "faq.lead": "Une autre question ? Écrivez-nous, on vous répond.",
+  "faq.q1": "Faut-il s'y connaître en technologie ?", "faq.a1": "Non. On installe tout et on vous le laisse prêt à l'emploi. Vous continuez à utiliser WhatsApp et votre agenda comme d'habitude.",
+  "faq.q2": "Combien de temps pour la mise en place ?", "faq.a2": "Les packs par secteur sont prêts en 7 jours environ. Pour un projet sur mesure, on vous donne le délai exact dans la proposition.",
+  "faq.q3": "Et si l'IA se trompe avec un client ?", "faq.a3": "On l'entraîne avec les informations de votre entreprise et on lui fixe des limites claires. Quand elle ne sait pas, ou si le client le demande, elle vous passe la conversation.",
+  "faq.q4": "Et les données de mes clients ?", "faq.a4": "Les données vous appartiennent. On travaille avec des outils prévus pour respecter le RGPD et on vous explique où chaque donnée est stockée.",
+  "faq.q5": "Et si quelque chose ne marche plus ?", "faq.a5": "Les formules incluent la maintenance : on surveille vos automatisations et on les répare nous-mêmes.",
+  "faq.q6": "Vous travaillez dans toute l'Espagne ?", "faq.a6": "Oui. On travaille à distance avec des entreprises de toute l'Espagne, en espagnol, anglais et français.",
+  "ct.eyebrow": "Contact", "ct.title": "Dites-nous ce qui vous fait perdre du temps",
+  "ct.lead": "Remplissez le formulaire et on vous écrit sur WhatsApp pour fixer votre consultation gratuite de 20 minutes.",
+  "ct.zoneLabel": "Zone", "ct.zone": "Toute l'Espagne, à distance",
+  "ct.name": "Nom", "ct.biz": "Entreprise", "ct.sector": "Secteur", "ct.other": "Autre", "ct.phone": "WhatsApp ou téléphone", "ct.msg": "Que voulez-vous améliorer ?",
+  "ct.msgPh": "Ex. : je réponds sur WhatsApp jusqu'à minuit et je perds des réservations",
+  "ct.submit": "Préparer mon message", "ct.doneTitle": "Votre message est prêt", "ct.doneText": "Ouvrez-le dans WhatsApp et appuyez sur envoyer. On vous répond pour fixer la consultation.", "ct.doneBtn": "Ouvrir WhatsApp",
+  "ct.legal": "Vos données servent uniquement à répondre à votre demande.",
+  "ct.errName": "Indiquez votre nom.", "ct.errPhone": "Indiquez un numéro pour vous répondre.",
+  "ft.tag": "Votre équipe digitale avec IA. Automatisation, site web, réseaux et publicité pour les PME et commerces en Espagne.",
+  "ft.services": "Services", "ft.auto": "Automatisations", "ft.web": "Site, SEO et publicité", "ft.legal": "Mentions légales",
+  "ft.l1": "Mentions légales", "ft.l2": "Politique de confidentialité", "ft.l3": "Politique de cookies", "ft.made": "Fait en Espagne · ES · EN · FR",
+  "theme": "Changer le thème clair ou sombre", "menu": "Ouvrir le menu",
+  "cta.demo": "Voir la démo en direct",
+  "wf.eyebrow": "En direct", "wf.title": "Voici comment une automatisation travaille pour vous",
+  "wf.lead": "Un message arrive, l'IA comprend ce que veut le client et le flux fait le reste : il réserve, répond ou envoie un devis. Sans que vous touchiez à rien.",
+  "wf.name": "Service client · Restaurant", "wf.sub": "Démonstration en direct", "wf.try": "Tester :", "wf.tryAria": "Tester un cas",
+  "wf.sc0": "Réservation", "wf.sc1": "Question", "wf.sc2": "Devis", "wf.active": "Actif", "wf.runs": "Exécutions",
+  "wf.sr": "Démonstration animée : un message WhatsApp arrive, l'IA détecte s'il s'agit d'une réservation, d'une question ou d'une demande de devis, et le flux crée la réservation, répond ou envoie le devis automatiquement."
+};
+const ES_EXTRA = { "ct.errName": "Escribe tu nombre.", "ct.errPhone": "Escribe un número para responderte." };
+
+const SECTORS = {
+  es: [
+    { d: "Que ninguna reserva se pierda por no contestar a tiempo.", l: ["Reservas por WhatsApp e Instagram, 24/7", "La IA responde sobre carta y alérgenos en 3 idiomas", "Recordatorios para reducir mesas vacías", "Petición de reseña en Google tras la visita"] },
+    { d: "Menos llamadas en recepción y menos citas perdidas.", l: ["Citas y cambios de cita automáticos", "Recordatorios y formularios antes de la consulta", "Respuestas a precios, seguros y horarios", "Reactivación de pacientes que no vuelven"] },
+    { d: "La agenda llena sin estar pegada al móvil.", l: ["Reservas online conectadas a tu agenda", "Recordatorios y lista de espera automática", "Aviso a clientas habituales cuando les toca volver", "Contenido para Instagram cada semana"] },
+    { d: "Responder antes que nadie a cada contacto.", l: ["Respuesta inmediata a contactos de los portales", "La IA cualifica: presupuesto, zona y plazo", "Agenda de visitas automática", "Seguimiento por WhatsApp hasta la firma"] },
+    { d: "Huéspedes atendidos en su idioma, de día y de noche.", l: ["Check-in y normas enviados automáticamente", "Respuestas a huéspedes en su idioma, 24/7", "Aviso a limpieza al terminar cada estancia", "Petición de reseña tras la salida"] }
+  ],
+  fr: [
+    { d: "Plus aucune réservation perdue faute de réponse à temps.", l: ["Réservations par WhatsApp et Instagram, 24h/24", "L'IA répond sur la carte et les allergènes en 3 langues", "Rappels pour réduire les tables vides", "Demande d'avis Google après la visite"] },
+    { d: "Moins d'appels à l'accueil et moins de rendez-vous manqués.", l: ["Prise et modification de rendez-vous automatiques", "Rappels et formulaires avant la consultation", "Réponses sur les prix, mutuelles et horaires", "Relance des patients qui ne reviennent pas"] },
+    { d: "Un agenda plein sans rester collé au téléphone.", l: ["Réservation en ligne reliée à votre agenda", "Rappels et liste d'attente automatique", "Message aux clientes fidèles quand c'est le moment de revenir", "Contenu Instagram chaque semaine"] },
+    { d: "Répondre avant tout le monde à chaque contact.", l: ["Réponse immédiate aux contacts des portails", "L'IA qualifie : budget, zone et délai", "Planification automatique des visites", "Suivi par WhatsApp jusqu'à la signature"] },
+    { d: "Des voyageurs servis dans leur langue, jour et nuit.", l: ["Check-in et règlement envoyés automatiquement", "Réponses aux voyageurs dans leur langue, 24h/24", "Alerte au ménage à la fin de chaque séjour", "Demande d'avis après le départ"] }
+  ]
+};
+
+let lang = "es";
+function t(key) {
+  if (lang === "fr") return FR[key];
+  const el = document.querySelector(`[data-i18n="${key}"]`);
+  return ES_EXTRA[key] || (el && el.dataset.es) || (el && el.innerHTML);
+}
+
+function applyLang(next) {
+  lang = next;
+  document.documentElement.lang = next;
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    if (el.dataset.es === undefined) el.dataset.es = el.innerHTML;
+    const k = el.dataset.i18n;
+    el.innerHTML = next === "fr" && FR[k] ? FR[k] : el.dataset.es;
+  });
+  document.querySelectorAll("[data-i18n-attr]").forEach(el => {
+    const [attr, k] = el.dataset.i18nAttr.split(":");
+    const store = "es" + attr.replace(/[^a-z]/gi, "");
+    if (el.dataset[store] === undefined) el.dataset[store] = el.getAttribute(attr) || "";
+    el.setAttribute(attr, next === "fr" && FR[k] ? FR[k] : el.dataset[store]);
+  });
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === next)));
+  renderSector(currentSector);
+  calc();
+  wfRender();
+  store.set("automia-lang", next);
+}
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => applyLang(b.dataset.lang)));
+document.getElementById("fr-cta").addEventListener("click", () => applyLang("fr"));
+
+/* ---------- Theme ---------- */
+const themeBtn = document.getElementById("theme-btn");
+function isDark() {
+  const set = document.documentElement.dataset.theme;
+  if (set) return set === "dark";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+const savedTheme = store.get("automia-theme");
+if (savedTheme === "dark" || savedTheme === "light") document.documentElement.dataset.theme = savedTheme;
+themeBtn.addEventListener("click", () => {
+  const next = isDark() ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  store.set("automia-theme", next);
+  readColors();
+});
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => readColors());
+
+/* ---------- Header ---------- */
+const header = document.querySelector(".header");
+const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 8);
+window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+const menuBtn = document.getElementById("menu-btn"), mobileNav = document.getElementById("mobile-nav");
+menuBtn.addEventListener("click", () => {
+  const open = menuBtn.getAttribute("aria-expanded") !== "true";
+  menuBtn.setAttribute("aria-expanded", String(open));
+  mobileNav.hidden = !open;
+});
+mobileNav.addEventListener("click", e => { if (e.target.closest("a")) { mobileNav.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); } });
+
+/* ---------- Hero flow animation ---------- */
+const steps = [...document.querySelectorAll(".step")];
+function showAllSteps() { steps.forEach(s => s.classList.add("on", "done", "typed")); }
+if (reduceMotion) showAllSteps();
+else {
+  let i = 0;
+  const tick = () => {
+    if (i === 0) steps.forEach(s => s.classList.remove("on", "done", "typed"));
+    if (i < steps.length) {
+      steps[i].classList.add("on");
+      if (i > 0) steps[i - 1].classList.add("done");
+      if (i === 1) setTimeout(() => steps[1].classList.add("typed"), 1100);
+      i++;
+      setTimeout(tick, i === 2 ? 2000 : 1500);
+    } else {
+      setTimeout(() => { i = 0; tick(); }, 3200);
+    }
+  };
+  tick();
+}
+
+/* ---------- Sector tabs ---------- */
+let currentSector = 0;
+const tabs = [...document.querySelectorAll(".tab")];
+function renderSector(idx) {
+  currentSector = idx;
+  const data = SECTORS[lang][idx];
+  tabs.forEach((tb, j) => { tb.setAttribute("aria-selected", String(j === idx)); tb.tabIndex = j === idx ? 0 : -1; });
+  document.getElementById("sector-panel").setAttribute("aria-labelledby", "tab-" + idx);
+  document.getElementById("sector-name").textContent = tabs[idx].textContent;
+  document.getElementById("sector-desc").textContent = data.d;
+  document.getElementById("sector-list").innerHTML = data.l.map(x => `<li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>${x}</span></li>`).join("");
+}
+tabs.forEach((tb, j) => {
+  tb.addEventListener("click", () => renderSector(j));
+  tb.addEventListener("keydown", e => {
+    let n = null;
+    if (e.key === "ArrowRight") n = (j + 1) % tabs.length;
+    if (e.key === "ArrowLeft") n = (j - 1 + tabs.length) % tabs.length;
+    if (e.key === "Home") n = 0;
+    if (e.key === "End") n = tabs.length - 1;
+    if (n !== null) { e.preventDefault(); renderSector(n); tabs[n].focus(); }
+  });
+});
+
+/* ---------- Calculator ---------- */
+const DAYS = 30, CONVERSION = 0.2;
+const $ = id => document.getElementById(id);
+function fmt(n, opts) { return new Intl.NumberFormat(lang === "fr" ? "fr-FR" : "es-ES", opts).format(n); }
+function tween(el, to, show) {
+  const from = el._v === undefined ? to : el._v; el._v = to;
+  cancelAnimationFrame(el._raf);
+  if (reduceMotion || from === to) { el.textContent = show(to); return; }
+  const t0 = performance.now();
+  const step = now => {
+    const t = Math.min(1, (now - t0) / 500), k = 1 - Math.pow(1 - t, 3);
+    el.textContent = show(from + (to - from) * k);
+    if (t < 1) el._raf = requestAnimationFrame(step);
+  };
+  el._raf = requestAnimationFrame(step);
+}
+function calc() {
+  const q = +$("c-q").value, m = +$("c-m").value, p = +$("c-p").value / 100, v = +$("c-v").value;
+  $("o-q").textContent = q; $("o-m").textContent = m;
+  $("o-p").textContent = fmt(p * 100) + " %"; $("o-v").textContent = fmt(v) + " €";
+  const hours = q * m * DAYS / 60, missed = q * DAYS * p, money = missed * CONVERSION * v;
+  tween($("r-hours"), hours, v => fmt(Math.round(v)) + " h");
+  tween($("r-missed"), missed, v => fmt(Math.round(v)));
+  tween($("r-money"), money, v => fmt(Math.round(v / 10) * 10, { style: "currency", currency: "EUR", maximumFractionDigits: 0 }));
+}
+["c-q", "c-m", "c-p", "c-v"].forEach(id => $(id).addEventListener("input", calc));
+
+/* ---------- Contact ---------- */
+const waBase = "https://wa.me/" + CONFIG.whatsapp;
+$("wa-link").href = waBase;
+$("wa-display").textContent = CONFIG.whatsappDisplay;
+$("email-display").textContent = CONFIG.email;
+document.querySelectorAll("[data-plan]").forEach(a => a.addEventListener("click", () => {
+  const msg = $("f-msg");
+  const line = (lang === "fr" ? "Je suis intéressé par la formule " : "Me interesa el plan ") + a.dataset.plan + ".";
+  if (!msg.value.includes(a.dataset.plan)) msg.value = (line + "\n" + msg.value).trim();
+}));
+$("contact-form").addEventListener("submit", e => {
+  e.preventDefault();
+  let ok = true;
+  [["f-name", "ct.errName"], ["f-phone", "ct.errPhone"]].forEach(([id, key]) => {
+    const input = $(id), field = input.closest(".field"), err = field.querySelector(".err");
+    const bad = !input.value.trim();
+    field.classList.toggle("invalid", bad);
+    input.setAttribute("aria-invalid", String(bad));
+    err.textContent = bad ? t(key) : "";
+    if (bad && ok) { input.focus(); ok = false; }
+  });
+  if (!ok) return;
+  const L = lang === "fr"
+    ? ["Bonjour Automia !", "Nom", "Entreprise", "Secteur", "Téléphone", "Besoin"]
+    : ["¡Hola Automia!", "Nombre", "Negocio", "Sector", "Teléfono", "Necesidad"];
+  const text = [L[0], `${L[1]}: ${$("f-name").value.trim()}`, $("f-biz").value.trim() && `${L[2]}: ${$("f-biz").value.trim()}`,
+    `${L[3]}: ${$("f-sector").value}`, `${L[4]}: ${$("f-phone").value.trim()}`, $("f-msg").value.trim() && `${L[5]}: ${$("f-msg").value.trim()}`]
+    .filter(Boolean).join("\n");
+  $("done-link").href = waBase + "?text=" + encodeURIComponent(text);
+  $("form-done").hidden = false;
+  $("done-link").focus();
+});
+
+/* ---------- Animated background: automation network ---------- */
+const canvas = $("bg-canvas"), ctx = canvas.getContext("2d");
+let W = 0, H = 0, nodes = [], pulses = [], rings = [], adj = [], colors = {}, rafId = null;
+const LINK = 165, MOUSE_R = 200, MAX_PULSES = 26;
+const mouse = { x: -9999, y: -9999, active: false };
+let lastScroll = window.scrollY;
+
+function readColors() {
+  const cs = getComputedStyle(document.documentElement);
+  colors = { line: cs.getPropertyValue("--primary").trim(), node: cs.getPropertyValue("--text").trim(), accent: cs.getPropertyValue("--accent").trim(), dark: isDark() };
+  if (reduceMotion) draw(0, 0);
+}
+function resize() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const count = Math.round(Math.min(95, Math.max(34, W * H / 15000)));
+  const hubs = Math.max(4, Math.round(count / 12));
+  const now = performance.now();
+  nodes = Array.from({ length: count }, (_, i) => ({
+    x: Math.random() * W, y: Math.random() * H,
+    vx: (Math.random() - .5) * .32, vy: (Math.random() - .5) * .32,
+    z: Math.random() * .6 + .4, hub: i < hubs,
+    r: i < hubs ? 3.2 : Math.random() * 1.3 + 1.1,
+    next: now + 800 + Math.random() * 5000
+  }));
+  pulses = []; rings = [];
+  if (reduceMotion) draw(0, 0);
+}
+function spawnPulse(from, to, color) {
+  if (pulses.length >= MAX_PULSES) return;
+  pulses.push({ a: from, b: to, t: 0, speed: .012 + Math.random() * .01, hops: 3 + Math.floor(Math.random() * 5), c: color || (Math.random() < .3 ? colors.accent : colors.line), trail: [] });
+}
+function draw(dt, now) {
+  ctx.clearRect(0, 0, W, H);
+  const dark = colors.dark, baseA = dark ? .24 : .17;
+
+  // parallax on scroll + drift + cursor repulsion
+  const sy = window.scrollY, ds = sy - lastScroll; lastScroll = sy;
+  for (const n of nodes) {
+    n.x += n.vx * dt; n.y += n.vy * dt - ds * .12 * n.z;
+    if (mouse.active) {
+      const dx = n.x - mouse.x, dy = n.y - mouse.y, d = Math.hypot(dx, dy);
+      if (d < MOUSE_R && d > .1) { const f = (1 - d / MOUSE_R) * .7 * dt; n.x += dx / d * f; n.y += dy / d * f; }
+    }
+    if (n.x < -30) n.x = W + 30; else if (n.x > W + 30) n.x = -30;
+    if (n.y < -30) n.y = H + 30; else if (n.y > H + 30) n.y = -30;
+  }
+
+  // links
+  adj = nodes.map(() => []);
+  ctx.lineWidth = 1; ctx.strokeStyle = colors.line;
+  for (let a = 0; a < nodes.length; a++) {
+    const A = nodes[a];
+    for (let b = a + 1; b < nodes.length; b++) {
+      const B = nodes[b], d = Math.hypot(A.x - B.x, A.y - B.y);
+      if (d < LINK) {
+        ctx.globalAlpha = (1 - d / LINK) * baseA * (A.z + B.z) * .9;
+        ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+        adj[a].push(b); adj[b].push(a);
+      }
+    }
+  }
+
+  // cursor connections
+  if (mouse.active) {
+    for (const n of nodes) {
+      const d = Math.hypot(n.x - mouse.x, n.y - mouse.y);
+      if (d < MOUSE_R) {
+        ctx.globalAlpha = (1 - d / MOUSE_R) * (dark ? .55 : .4);
+        ctx.beginPath(); ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(n.x, n.y); ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = dark ? .9 : .7; ctx.fillStyle = colors.line;
+    ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 3, 0, Math.PI * 2); ctx.fill();
+  }
+
+  if (!reduceMotion) {
+    // hubs fire like automation triggers
+    nodes.forEach((n, i) => {
+      if (n.hub && now > n.next && adj[i].length) {
+        rings.push({ x: n.x, y: n.y, r: n.r, c: Math.random() < .35 ? colors.accent : colors.line });
+        adj[i].slice().sort(() => Math.random() - .5).slice(0, 3).forEach(nb => spawnPulse(i, nb));
+        n.next = now + 3000 + Math.random() * 4500;
+      }
+    });
+    if (Math.random() < .04) {
+      const i = Math.floor(Math.random() * nodes.length);
+      if (adj[i].length) spawnPulse(i, adj[i][Math.floor(Math.random() * adj[i].length)]);
+    }
+  }
+
+  // expanding rings
+  for (let k = rings.length - 1; k >= 0; k--) {
+    const r = rings[k]; r.r += 1.3 * dt;
+    const life = 1 - r.r / 110;
+    if (life <= 0) { rings.splice(k, 1); continue; }
+    ctx.globalAlpha = life * (dark ? .45 : .35); ctx.strokeStyle = r.c; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2); ctx.stroke();
+  }
+
+  // pulses travelling through the network, with trails
+  ctx.lineCap = "round";
+  for (let k = pulses.length - 1; k >= 0; k--) {
+    const p = pulses[k];
+    p.t += p.speed * dt;
+    if (p.t >= 1) {
+      const options = (adj[p.b] || []).filter(x => x !== p.a);
+      if (--p.hops > 0 && options.length) { p.a = p.b; p.b = options[Math.floor(Math.random() * options.length)]; p.t = 0; }
+      else { pulses.splice(k, 1); continue; }
+    }
+    const A = nodes[p.a], B = nodes[p.b];
+    if (Math.hypot(A.x - B.x, A.y - B.y) > LINK * 1.2) { pulses.splice(k, 1); continue; }
+    const x = A.x + (B.x - A.x) * p.t, y = A.y + (B.y - A.y) * p.t;
+    p.trail.push(x, y); if (p.trail.length > 24) p.trail.splice(0, 2);
+    ctx.strokeStyle = p.c; ctx.lineWidth = 2;
+    for (let j = 2; j < p.trail.length; j += 2) {
+      ctx.globalAlpha = (j / p.trail.length) * .55;
+      ctx.beginPath(); ctx.moveTo(p.trail[j - 2], p.trail[j - 1]); ctx.lineTo(p.trail[j], p.trail[j + 1]); ctx.stroke();
+    }
+    ctx.fillStyle = p.c;
+    ctx.globalAlpha = .18; ctx.beginPath(); ctx.arc(x, y, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = .95; ctx.beginPath(); ctx.arc(x, y, 2.4, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.lineWidth = 1;
+
+  // nodes
+  for (const n of nodes) {
+    if (n.hub) {
+      ctx.globalAlpha = dark ? .95 : .85; ctx.fillStyle = colors.line;
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = .3; ctx.strokeStyle = colors.line;
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r + 4, 0, Math.PI * 2); ctx.stroke();
+    } else {
+      ctx.globalAlpha = (dark ? .45 : .3) * n.z; ctx.fillStyle = colors.node;
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+let last = performance.now();
+function loop(now) {
+  const dt = Math.min((now - last) / 16.67, 3); last = now;
+  draw(dt, now);
+  rafId = requestAnimationFrame(loop);
+}
+window.addEventListener("pointermove", e => { if (e.pointerType === "mouse") { mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true; } }, { passive: true });
+document.addEventListener("mouseout", e => { if (!e.relatedTarget) mouse.active = false; });
+window.addEventListener("resize", () => { clearTimeout(window.__rz); window.__rz = setTimeout(resize, 150); });
+document.addEventListener("visibilitychange", () => {
+  if (reduceMotion) return;
+  if (document.hidden) { cancelAnimationFrame(rafId); rafId = null; }
+  else if (!rafId) { last = performance.now(); rafId = requestAnimationFrame(loop); }
+});
+
+/* ---------- Workflow demo ---------- */
+const WF_NODES = [
+  { id: "n1", ic: "msg", k: "msg", main: true }, { id: "n2", ic: "bot", k: "ai", main: true }, { id: "n3", ic: "split", k: "logic", main: true },
+  { id: "a1", ic: "cal", k: "data" }, { id: "a2", ic: "msg", k: "msg" },
+  { id: "b1", ic: "bot", k: "ai" }, { id: "b2", ic: "msg", k: "msg" },
+  { id: "c1", ic: "file", k: "data" }, { id: "c2", ic: "mail", k: "msg" }
+];
+const WF_EDGES = [["n1", "n2"], ["n2", "n3"], ["n3", "a1"], ["n3", "b1"], ["n3", "c1"], ["a1", "a2"], ["b1", "b2"], ["c1", "c2"]];
+const WF_TEXT = {
+  es: { n1: ["WhatsApp", "Nuevo mensaje"], n2: ["IA", "Detecta la intención"], n3: ["Router", "Elige el camino"],
+        a1: ["Google Calendar", "Crear reserva"], a2: ["WhatsApp", "Confirmar y recordar"],
+        b1: ["IA", "Redactar respuesta"], b2: ["WhatsApp", "Enviar respuesta"],
+        c1: ["Presupuesto", "Generar PDF"], c2: ["Email + CRM", "Enviar y hacer seguimiento"], done: "Ejecución completada" },
+  fr: { n1: ["WhatsApp", "Nouveau message"], n2: ["IA", "Détecte l'intention"], n3: ["Routeur", "Choisit le chemin"],
+        a1: ["Google Agenda", "Créer la réservation"], a2: ["WhatsApp", "Confirmer et rappeler"],
+        b1: ["IA", "Rédiger la réponse"], b2: ["WhatsApp", "Envoyer la réponse"],
+        c1: ["Devis", "Générer le PDF"], c2: ["Email + CRM", "Envoyer et relancer"], done: "Exécution terminée" }
+};
+const WF_LOGS = {
+  es: [
+    ["Mensaje recibido: «¿Mesa para 4 el sábado a las 21h?»", "IA · intención: reserva (4 personas, sáb 21:00)", "Router → camino «Reservas»", "Google Calendar · evento creado: sáb 21:00", "WhatsApp · confirmación enviada + recordatorio programado"],
+    ["Mensaje recibido: «¿Tenéis platos sin gluten?»", "IA · intención: pregunta sobre la carta", "Router → camino «Preguntas»", "IA · respuesta redactada con tu carta", "WhatsApp · respuesta enviada"],
+    ["Mensaje recibido: «Presupuesto para una cena de empresa de 20 personas»", "IA · intención: presupuesto (20 personas)", "Router → camino «Presupuestos»", "Presupuesto PDF generado con tus tarifas", "Email enviado · seguimiento en el CRM en 3 días"]
+  ],
+  fr: [
+    ["Message reçu : « Une table pour 4 samedi à 21h ? »", "IA · intention : réservation (4 pers., sam. 21h00)", "Routeur → chemin « Réservations »", "Google Agenda · événement créé : sam. 21h00", "WhatsApp · confirmation envoyée + rappel programmé"],
+    ["Message reçu : « Vous avez des plats sans gluten ? »", "IA · intention : question sur la carte", "Routeur → chemin « Questions »", "IA · réponse rédigée à partir de votre carte", "WhatsApp · réponse envoyée"],
+    ["Message reçu : « Un devis pour un dîner d'entreprise de 20 personnes »", "IA · intention : devis (20 personnes)", "Routeur → chemin « Devis »", "Devis PDF généré avec vos tarifs", "Email envoyé · relance dans le CRM dans 3 jours"]
+  ]
+};
+const NS = "http://www.w3.org/2000/svg";
+const wfGrid = $("wf-grid"), wfSvg = $("wf-edges"), wfLog = $("wf-log"), wfChips = [...document.querySelectorAll(".wf-chip")];
+let wfE = {}, wfPacket = null, wfRunId = 0, wfScIndex = 0, wfRuns = 0, wfTimer = null, wfVisible = false, wfPending = true;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const wfNode = id => $("wf-" + id);
+
+function wfRender() {
+  const T = WF_TEXT[lang];
+  wfGrid.innerHTML = WF_NODES.map(n =>
+    `<div class="node k-${n.k} ${n.main ? "main" : "br"}" id="wf-${n.id}" style="grid-area:${n.id}">` +
+    `<span class="n-ic"><svg class="i" aria-hidden="true"><use href="#i-${n.ic}"/></svg></span>` +
+    `<span class="n-txt"><span class="n-t">${T[n.id][0]}</span><span class="n-s">${T[n.id][1]}</span></span>` +
+    `<span class="n-badge"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></div>`).join("");
+  wfSvg.innerHTML = ""; wfE = {};
+  WF_EDGES.forEach(([a, b]) => {
+    const path = document.createElementNS(NS, "path"); path.setAttribute("class", "wf-edge");
+    const p1 = document.createElementNS(NS, "circle"), p2 = document.createElementNS(NS, "circle");
+    [p1, p2].forEach(c => { c.setAttribute("r", "4.5"); c.setAttribute("class", "wf-port"); });
+    wfSvg.append(path, p1, p2);
+    wfE[a + "-" + b] = { path, p1, p2 };
+  });
+  wfPacket = document.createElementNS(NS, "g"); wfPacket.setAttribute("class", "packet");
+  wfPacket.innerHTML = '<circle class="glow" r="12"/><circle class="core" r="5.5"/>';
+  wfSvg.append(wfPacket);
+  wfLayout();
+  wfRestart();
+}
+function wfLayout() {
+  const base = wfSvg.getBoundingClientRect();
+  WF_EDGES.forEach(([a, b]) => {
+    const e = wfE[a + "-" + b], A = wfNode(a).getBoundingClientRect(), B = wfNode(b).getBoundingClientRect();
+    let x1, y1, x2, y2, d;
+    if (B.left >= A.right - 4) {
+      x1 = A.right - base.left; y1 = A.top + A.height / 2 - base.top; x2 = B.left - base.left; y2 = B.top + B.height / 2 - base.top;
+      const c = Math.max(24, (x2 - x1) * .55);
+      d = `M${x1},${y1} C${x1 + c},${y1} ${x2 - c},${y2} ${x2},${y2}`;
+    } else {
+      x1 = A.left + A.width / 2 - base.left; y1 = A.bottom - base.top; x2 = B.left + B.width / 2 - base.left; y2 = B.top - base.top;
+      const c = Math.max(14, (y2 - y1) * .55);
+      d = `M${x1},${y1} C${x1},${y1 + c} ${x2},${y2 - c} ${x2},${y2}`;
+    }
+    e.path.setAttribute("d", d);
+    e.p1.setAttribute("cx", x1); e.p1.setAttribute("cy", y1); e.p2.setAttribute("cx", x2); e.p2.setAttribute("cy", y2);
+  });
+}
+function wfReset() {
+  WF_NODES.forEach(n => wfNode(n.id).classList.remove("running", "done", "dim"));
+  Object.values(wfE).forEach(e => { e.path.classList.remove("active", "done", "dim"); e.p1.classList.remove("on", "dim"); e.p2.classList.remove("on", "dim"); });
+  if (wfPacket) wfPacket.classList.remove("show");
+}
+function wfLogLine(text, glyph, cls) {
+  const line = document.createElement("div");
+  line.className = "log-line" + (cls ? " " + cls : "");
+  const time = new Date().toLocaleTimeString(lang === "fr" ? "fr-FR" : "es-ES", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  line.innerHTML = `<time>${time}</time><span class="g">${glyph}</span><span class="x"></span>`;
+  line.querySelector(".x").textContent = text;
+  wfLog.append(line);
+  while (wfLog.children.length > 9) wfLog.firstElementChild.remove();
+}
+function wfDimOthers(br) {
+  "abc".split("").filter(x => x !== br).forEach(x => {
+    wfNode(x + "1").classList.add("dim"); wfNode(x + "2").classList.add("dim");
+    [wfE["n3-" + x + "1"], wfE[x + "1-" + x + "2"]].forEach(e => { e.path.classList.add("dim"); e.p1.classList.add("dim"); e.p2.classList.add("dim"); });
+  });
+}
+function wfTravel(a, b, id) {
+  const e = wfE[a + "-" + b], len = e.path.getTotalLength();
+  e.path.classList.add("active"); e.p1.classList.add("on");
+  wfPacket.classList.add("show");
+  return new Promise(res => {
+    const t0 = performance.now(), dur = 700;
+    const step = now => {
+      if (id !== wfRunId) return res();
+      const t = Math.min(1, (now - t0) / dur), k = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      const pt = e.path.getPointAtLength(len * k);
+      wfPacket.setAttribute("transform", `translate(${pt.x},${pt.y})`);
+      if (t < 1) requestAnimationFrame(step);
+      else { e.path.classList.remove("active"); e.path.classList.add("done"); e.p2.classList.add("on"); wfPacket.classList.remove("show"); res(); }
+    };
+    requestAnimationFrame(step);
+  });
+}
+async function wfRun(sc) {
+  const id = ++wfRunId;
+  wfReset();
+  wfChips.forEach(c => c.setAttribute("aria-pressed", String(+c.dataset.sc === sc)));
+  const L = WF_LOGS[lang][sc], br = "abc"[sc], t0 = performance.now();
+  const chk = () => { if (id !== wfRunId) throw new Error("aborted"); };
+  const exec = async (x, ms, text, glyph) => {
+    wfNode(x).classList.add("running"); await sleep(ms); chk();
+    wfNode(x).classList.remove("running"); wfNode(x).classList.add("done"); wfLogLine(text, glyph || "✓");
+  };
+  try {
+    await exec("n1", 500, L[0]);
+    await wfTravel("n1", "n2", id); chk();
+    await exec("n2", 1000, L[1]);
+    await wfTravel("n2", "n3", id); chk();
+    await exec("n3", 450, L[2], "↳");
+    wfDimOthers(br);
+    await wfTravel("n3", br + "1", id); chk();
+    await exec(br + "1", 950, L[3]);
+    await wfTravel(br + "1", br + "2", id); chk();
+    await exec(br + "2", 650, L[4]);
+    const secs = ((performance.now() - t0) / 1000).toFixed(1).replace(".", ",");
+    wfLogLine(WF_TEXT[lang].done + " · " + secs + " s", "●", "final");
+    $("wf-runs").textContent = ++wfRuns;
+    return true;
+  } catch (err) { return false; }
+}
+async function wfNext() {
+  clearTimeout(wfTimer);
+  if (!wfVisible || document.hidden) { wfPending = true; return; }
+  wfPending = false;
+  const sc = wfScIndex; wfScIndex = (wfScIndex + 1) % 3;
+  if (await wfRun(sc)) wfTimer = setTimeout(wfNext, 2800);
+}
+function wfStatic() {
+  wfReset();
+  ["n1", "n2", "n3", "a1", "a2"].forEach(x => wfNode(x).classList.add("done"));
+  ["n1-n2", "n2-n3", "n3-a1", "a1-a2"].forEach(k => { wfE[k].path.classList.add("done"); wfE[k].p1.classList.add("on"); wfE[k].p2.classList.add("on"); });
+  wfDimOthers("a");
+  wfChips[0].setAttribute("aria-pressed", "true");
+  wfLog.innerHTML = "";
+  WF_LOGS[lang][0].forEach((t, i) => wfLogLine(t, i === 2 ? "↳" : "✓"));
+  wfLogLine(WF_TEXT[lang].done, "●", "final");
+}
+function wfRestart() {
+  wfRunId++; clearTimeout(wfTimer);
+  if (reduceMotion) { wfStatic(); return; }
+  wfReset(); wfLog.innerHTML = ""; wfScIndex = 0; wfPending = true;
+  if (wfVisible) wfNext();
+}
+wfChips.forEach(c => c.addEventListener("click", () => {
+  wfScIndex = +c.dataset.sc;
+  if (reduceMotion) return;
+  wfVisible = true; wfNext();
+}));
+if ("IntersectionObserver" in window) {
+  new IntersectionObserver(entries => {
+    wfVisible = entries[0].isIntersecting;
+    if (wfVisible && wfPending) wfNext();
+  }, { threshold: .25 }).observe($("wf-canvas"));
+} else { wfVisible = true; }
+document.addEventListener("visibilitychange", () => { if (!document.hidden && wfVisible && wfPending) wfNext(); });
+if ("ResizeObserver" in window) new ResizeObserver(() => wfLayout()).observe(wfGrid);
+else window.addEventListener("resize", wfLayout);
+
+/* ---------- Init ---------- */
+readColors(); resize();
+if (!reduceMotion) rafId = requestAnimationFrame(loop);
+renderSector(0);
+const savedLang = store.get("automia-lang");
+applyLang(savedLang === "fr" ? "fr" : "es");
+</script>
+</body>
+</html>
